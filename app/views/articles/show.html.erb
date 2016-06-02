@@ -1,0 +1,10 @@
+<h1>Article!</h1>
+<p><b>Title:</b> <%= @article[:title].html_safe %></p>
+<p><b>Body:</b> <%= @article[:body].html_safe %></p>
+<% if @article[:tags].any? %>
+  <b>Tags:</b> <ul>
+  <% @article[:tags].each do |tag| %>
+    <li><%= tag.html_safe %></li>
+  <% end %>
+  </ul>
+<% end %>
