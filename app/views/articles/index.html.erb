@@ -1,0 +1,42 @@
+<h1>Published Articles</h1>
+<style media="screen">
+table {
+   border-collapse:collapse;
+   border: 1px solid #333333;
+ }
+ th, td {
+   border: 1px solid #333333;
+ }
+</style>
+<p><%= link_to "New Article", new_article_path %></p>
+<table>
+  <thead>
+    <tr>
+      <th>
+        Article title
+      </th>
+      <th>
+        Tags
+      </th>
+      <th>
+        Actions
+      </th>
+    </tr>
+  <tbody>
+    <% @articles.each do |article| %>
+    <tr>
+      <td>
+        <%= article.title %>
+      </td>
+      <td>
+        <%= article.tags.any? ? article.tags.join(', ') : '<span style="font-style: italic;">No Tags</span>'.html_safe %>
+      </td>
+      <td>
+        <%= link_to 'View', article_path(article) %>&nbsp;
+        <%= link_to 'Edit', edit_article_path(article) %>&nbsp;
+        <%= link_to 'Delete', article_path(article), method: :delete, confirm: 'Are you sure?' %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

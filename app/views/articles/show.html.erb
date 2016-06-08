@@ -1,4 +1,4 @@
-<h1>Article!</h1>
+<h1>Article! <%= link_to "edit", edit_article_path(@article) %></h1>
 <p><b>Title:</b> <%= @article[:title].html_safe %></p>
 <p><b>Body:</b> <%= @article[:body].html_safe %></p>
 <% if @article[:tags].any? %>
@@ -8,3 +8,5 @@
   <% end %>
   </ul>
 <% end %>
+
+<%= link_to "Back to Index", articles_path %>
