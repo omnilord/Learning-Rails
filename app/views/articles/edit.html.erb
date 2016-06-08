@@ -1,35 +1,3 @@
 <h1>Edit Article</h1>
 
-<% if @article.errors.any? %>
-<h3 class="error">The following errors occurred during save:</h3>
-  <% @article.errors.full_messages.each do |msg| %>
-<ul>
-  <li><%= msg.html_safe %></li>
-</ul>
-  <% end %>
-<% end %>
-
-<%= form_for @article do |f| %>
-  <p>
-    <%= f.label :title %><br />
-    <%= f.text_field :title, class: "form-control" %><br />
-  </p>
-  <p>
-    <%= f.label :body %><br />
-    <%= f.text_area :body, class: "form-control" %><br />
-  </p>
-  <fieldset>
-    <legend>Tags</legend>
-    <label><%= f.check_box :tags, { multiple: true }, 'A', nil %> A</label>
-    <label><%= f.check_box :tags, { multiple: true }, 'B', nil %> B</label>
-    <label><%= f.check_box :tags, { multiple: true }, 'c', nil %> C</label>
-    <label><%= f.check_box :tags, { multiple: true }, 'X', nil %> X</label>
-    <label><%= f.check_box :tags, { multiple: true }, 'Y', nil %> Y</label>
-    <label><%= f.check_box :tags, { multiple: true }, 'Z', nil %> Z</label>
-  </fieldset>
-  <p>
-    <%= f.submit %>
-  </p>
-<% end %>
-
-<%= link_to "Back to Index", articles_path %>
+<%= render 'form' %>
