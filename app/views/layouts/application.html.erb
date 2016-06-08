@@ -7,15 +7,10 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-  <% if flash.any? %>
-    <ul>
-    <% flash.each do |n, m| %>
-      <li class="<%= n %>"><%= html_escape(m) %></li>
-    <% end %>
-    </ul>
-  <% end %>
 
-<%= yield %>
+  <%= render 'layouts/flash' %>
+
+  <%= yield %>
 
 </body>
 </html>
