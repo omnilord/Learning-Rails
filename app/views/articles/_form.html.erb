@@ -1,11 +1,4 @@
-<% if @article.errors.any? %>
-<h3 class="error">The following errors occurred during save:</h3>
-  <% @article.errors.full_messages.each do |msg| %>
-<ul>
-  <li><%= msg.html_safe %></li>
-</ul>
-  <% end %>
-<% end %>
+<%= render 'components/errors', obj: @article %>
 
 <%= form_for @article do |f| %>
   <p>

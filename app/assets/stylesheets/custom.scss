@@ -1,2 +1,35 @@
+$navbar-default-bg: #228e22;
+$navbar-default-color-global: #53ee53;
+$navbar-default-color: $navbar-default-color-global;
+$navbar-default-link-color: $navbar-default-color-global;
+$navbar-default-link-hover-color: $navbar-default-color-global;
+$navbar-default-link-active-color: $navbar-default-color-global;
+
 @import "bootstrap-sprockets";
 @import "bootstrap";
+
+footer {
+  margin-top: 45px;
+  padding-top: 5px;
+  border-top: 1px solid black;
+  color: #555;
+
+  a:hover {
+    font-weight: bold;
+    color: #222;
+  }
+
+  small {
+    float: left;
+  }
+
+  ul {
+    float: right;
+    list-style: none;
+
+    li {
+      float: left;
+      margin-left: 15px;
+    }
+  }
+}

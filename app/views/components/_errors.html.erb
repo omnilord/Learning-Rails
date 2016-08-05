@@ -1,0 +1,18 @@
+<% if obj.errors.any? %>
+<div class="container">
+  <div class="col-xs-8 col-xs-offset-2">
+    <div class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="error">The following <%= pluralize(obj.errors.count, 'error') %> occurred during save:</h3>
+        <div class="panel-body">
+          <% obj.errors.full_messages.each do |msg| %>
+          <ul>
+            <li><%= msg.html_safe %></li>
+          </ul>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>

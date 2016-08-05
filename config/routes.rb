@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  root 'pages#index', layout: 'application'
+  get 'about' => 'pages#about'
 
   resources :articles
   # The priority is based upon order of creation: first created -> highest priority.
