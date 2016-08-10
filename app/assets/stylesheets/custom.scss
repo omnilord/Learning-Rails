@@ -13,6 +13,25 @@ $navbar-default-link-active-color: $navbar-default-color-global;
   top: -10px;
 }
 
+.article {
+  background-color: $navbar-default-bg;
+  color: $navbar-default-color-global;
+
+  a, a:hover, a:active, a:visited {
+    color: $navbar-default-color-global;
+  }
+
+  .title {
+    font-weight: bold;
+    font-size: 1.5em;
+    margin-bottom: 5px;
+  }
+
+  .actions {
+    margin-top: 5px;
+  }
+}
+
 footer {
   margin-top: 45px;
   padding-top: 5px;
