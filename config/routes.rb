@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :comments
   resources :users
   root 'pages#index', layout: 'application'
   get 'about' => 'pages#about'

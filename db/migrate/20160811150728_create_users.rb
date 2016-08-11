@@ -6,7 +6,6 @@ class CreateUsers < ActiveRecord::Migration
       t.text :email
     end
 
-    #add_column :articles, :user_id, :integer, index: true
     add_foreign_key :articles, :users, on_delete: :restrict, on_update: :cascade
   end
 
