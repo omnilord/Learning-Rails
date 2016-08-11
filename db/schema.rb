@@ -29,9 +29,11 @@ ActiveRecord::Schema.define(version: 20160811173821) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "user_id"
+    t.integer  "article_id"
     t.text     "body"
   end
 
+  add_index "comments", ["article_id"], name: "index_comments_on_article_id", using: :btree
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
@@ -42,5 +44,6 @@ ActiveRecord::Schema.define(version: 20160811173821) do
   end
 
   add_foreign_key "articles", "users", on_update: :cascade, on_delete: :restrict
+  add_foreign_key "comments", "articles"
   add_foreign_key "comments", "users"
 end
