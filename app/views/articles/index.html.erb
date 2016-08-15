@@ -33,11 +33,16 @@
             <%= truncate(article.body, length: 100) %>
           </div>
           <div class="actions">
-            <%= link_to 'Edit', edit_article_path(article), class: "btn btn-xs btn-primary" %>&nbsp;
+            <%= link_to 'Edit', edit_article_path(article),
+                        class: 'btn btn-xs btn-primary',
+                        style: 'color: white;' %>&nbsp;
             <%= link_to 'Delete', article_path(article), method: :delete,
-                        class: "btn btn-xs btn-danger",
+                        class: 'btn btn-xs btn-danger',
+                        style: 'color: white;',
                         data: { confirm: 'Are you sure?' } %>&nbsp;
-            <%= link_to 'Comment', new_comment_path(article), class: "btn btn-xs btn-success" %>&nbsp;
+            <%= link_to 'Comment', new_comment_path(article),
+                        class: 'btn btn-xs btn-success',
+                        style: 'color: white;' %>&nbsp;
           </div>
         </div>
       </div>

@@ -20,6 +20,7 @@
 /log/*
 !/log/.keep
 /tmp
+**.*_history
 
 # Ignore system files
 **.DS_Store

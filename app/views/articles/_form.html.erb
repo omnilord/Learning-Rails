@@ -1,13 +1,12 @@
 <%= render 'components/errors', obj: @article %>
 
+<div class="constainer form-group">
 <%= form_for @article do |f| %>
   <div class="col-xs-8 col-xs-offset-2">
-    <%= f.label :title %><br />
-    <%= f.text_field :title, class: "form-control" %><br />
+    <%= f.text_field :title, class: 'form-control', placeholder: 'Title of Article' %><br />
   </div>
   <div class="col-xs-8 col-xs-offset-2">
-    <%= f.label :body %><br />
-    <%= f.text_area :body, class: "form-control" %><br />
+    <%= f.text_area :body, class: 'form-control', placeholder: 'Body of article.' %><br />
   </div>
   <div class="col-xs-8 col-xs-offset-2">
     <fieldset>
@@ -24,5 +23,4 @@
     <%= f.submit %>
   </div>
 <% end %>
-
-<%= link_to "Back to Index", articles_path %>
+</div>
