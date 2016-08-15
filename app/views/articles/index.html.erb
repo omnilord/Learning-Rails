@@ -1,5 +1,5 @@
 <div class="container">
-  <h1 align="center">Published Articles</h1>
+  <h2 align="center">Published Articles</h2>
   <div class="well well-lg col-xs-8 col-xs-offset-2">
   <% if @articles.any? %>
     <% @articles.sort { |a, b| b.updated_at <=> a.updated_at } .each do |article| %>
@@ -9,7 +9,12 @@
             <%= link_to article.title, article_path(article) %>
             <small class="author">
               by: <%= article.user.username %>
-              <span class="timing"><%= time_ago_in_words(article.created_at) %> ago</span>
+              <span class="timing">
+                <%= time_ago_in_words(article.created_at) %> ago
+                <% if article.created_at != article.updated_at %>
+                (Last Updated: <%= time_ago_in_words(article.updated_at) %> ago)
+                <% end %>
+              </span>
             </small>
           </div>
           <div class="tags">

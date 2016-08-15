@@ -7,7 +7,6 @@ class Article < ActiveRecord::Base
   validates :user_id, presence: true
 
   before_validation do
-    debugger
     if self.association_loaded?(:user) #&& self.user.changed?
       if self.user.changed?
         if self.user.save != false
