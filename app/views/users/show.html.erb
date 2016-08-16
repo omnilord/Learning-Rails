@@ -1,19 +1,22 @@
-<p id="notice"><%= notice %></p>
+<div class="container">
+  <h2 align="center"><%= @user.username %>'s Profile</h2>
+  <div class="well well-large col-xs-8 col-xs-offset-2">
+    <div class="col-xs-8 col-xs-offset-1">
+      <strong>Email:</strong> <%= @user.email %><br/>
+      <strong>Articles:</strong> <%= @user.articles.count %><br/>
+      <strong>Comments:</strong> <%= @user.comments.count %>
+    </div>
+  </div>
 
-<p>
-  <strong>Username:</strong>
-  <%= @user.username %>
-</p>
-
-<p>
-  <strong>Email:</strong>
-  <%= @user.email %>
-</p>
-
-<p>
-  <strong>Password:</strong>
-  <%= @user.password %>
-</p>
-
-<%= link_to 'Edit', edit_user_path(@user) %> |
-<%= link_to 'Back', users_path %>
+  <% if @user.articles.any? %>
+    <div class="well col-xs-8 col-xs-offset-2">
+    <% @user.articles.each do |article| %>
+      <%= render 'articles/article_preview', article: article %>
+    <% end %>
+    </div>
+  <% else %>
+    <div class="col-xs-8 col-xs-offset-2">
+      This user has not created any articles.
+    </div>
+  <% end %>
+</div>

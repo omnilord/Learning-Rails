@@ -1,0 +1,43 @@
+<div class="row">
+  <div class="well well-sm article">
+    <div class="title">
+      <%= link_to article.title, article_path(article) %>
+      <small class="author">
+        by: <%= link_to article.user.username, user_path(article.user) %>
+        <span class="timing">
+          <%= time_ago_in_words(article.created_at) %> ago
+          <% if article.created_at != article.updated_at %>
+          (Last Updated: <%= time_ago_in_words(article.updated_at) %> ago)
+          <% end %>
+        </span>
+      </small>
+    </div>
+    <div class="tags">
+      <small>
+        Tags: <%= article.tags.any? ? article.tags.join(', ') : '<span style="font-style: italic;">No Tags</span>'.html_safe %>
+      </small>
+    </div>
+    <% if article.comments.any? %>
+    <div class="comments">
+      <small>
+        Comments: <%= article.comments.size %>
+      </small>
+    </div>
+    <% end %>
+    <div class="body">
+      <%= truncate(article.body, length: 100) %>
+    </div>
+    <div class="actions">
+      <%= link_to 'Edit', edit_article_path(article),
+                  class: 'btn btn-xs btn-primary',
+                  style: 'color: white;' %>&nbsp;
+      <%= link_to 'Delete', article_path(article), method: :delete,
+                  class: 'btn btn-xs btn-danger',
+                  style: 'color: white;',
+                  data: { confirm: 'Are you sure?' } %>&nbsp;
+      <%= link_to 'Comment', new_comment_path(article),
+                  class: 'btn btn-xs btn-success',
+                  style: 'color: white;' %>&nbsp;
+    </div>
+  </div>
+</div>

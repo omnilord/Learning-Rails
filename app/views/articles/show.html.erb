@@ -1,12 +1,23 @@
 <div class="container">
   <h2 align="center"><%= @article[:title].html_safe %></h2>
+  <div class="col-xs-8 col-xs-offset-2">
+    <small class="author">
+      <b>by:</b> <%= link_to @article.user.username, user_path(@article.user) %>
+      <span class="timing">
+        <%= time_ago_in_words(@article.created_at) %> ago
+        <% if @article.created_at != @article.updated_at %>
+        (Last Updated: <%= time_ago_in_words(@article.updated_at) %> ago)
+        <% end %>
+      </span>
+    </small>
+  </div>
   <div class="col-xs-4 col-xs-offset-2">
     <small>
       <b>Tags:</b>
       <% if @article[:tags].any? %>
-      <%= @article[:tags].map { |tag| tag.html_safe }.join(', ') %>
+        <%= @article[:tags].map { |tag| tag.html_safe }.join(', ') %>
       <% else %>
-      <span style="font-style: italic;">No Tags</span>
+        <span style="font-style: italic;">No Tags</span>
       <% end %>
     </small>
   </div>
@@ -29,7 +40,8 @@
   <div class="col-xs-8 col-xs-offset-2">
     <% @article.comments.each do |comment| %>
     <div class="well">
-    <%= "#{comment.user.username} [#{comment.updated_at}]: #{comment.body}".html_safe %>
+    <%= link_to(comment.user.username, user_path(comment.user)) << " [#{comment.updated_at}]:" %>
+    <%= comment.body.html_safe %>
     </div>
     <% end %>
   </div>

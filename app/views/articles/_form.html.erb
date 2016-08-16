@@ -1,6 +1,6 @@
 <%= render 'components/errors', obj: @article %>
 
-<div class="constainer form-group">
+<div class="form-group">
 <%= form_for @article do |f| %>
   <div class="col-xs-8 col-xs-offset-2">
     <%= f.text_field :title, class: 'form-control', placeholder: 'Title of Article' %><br />
@@ -11,12 +11,9 @@
   <div class="col-xs-8 col-xs-offset-2">
     <fieldset>
       <legend>Tags</legend>
-      <label><%= f.check_box :tags, { multiple: true }, 'A', nil %> A</label>
-      <label><%= f.check_box :tags, { multiple: true }, 'B', nil %> B</label>
-      <label><%= f.check_box :tags, { multiple: true }, 'c', nil %> C</label>
-      <label><%= f.check_box :tags, { multiple: true }, 'X', nil %> X</label>
-      <label><%= f.check_box :tags, { multiple: true }, 'Y', nil %> Y</label>
-      <label><%= f.check_box :tags, { multiple: true }, 'Z', nil %> Z</label>
+      <% %w{A B C D E F}.each do |tag| %>
+      <label><%= f.check_box(:tags, { multiple: true }, tag, nil) << tag %></label>
+      <% end %>
     </fieldset>
   </div>
   <div class="col-xs-8 col-xs-offset-2">

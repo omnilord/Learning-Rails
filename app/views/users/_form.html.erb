@@ -1,29 +1,27 @@
-<%= form_for(@user) do |f| %>
-  <% if @user.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+<div class="container">
+  <div class="col-xs-8 col-xs-offset-2">
+    <h2 align="center"><%= title %></h2>
+  </div>
 
-      <ul>
-      <% @user.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
+  <%= render 'components/errors', obj: @user %>
+
+  <div class="form-group">
+  <%= form_for @user do |f| %>
+    <div class="col-xs-8 col-xs-offset-2">
+      <%= f.text_field :username, class: "form-control", placeholder: 'Username' %>
+    </div>
+    <div class="col-xs-8 col-xs-offset-2">
+      <%= f.text_field :email, class: "form-control", placeholder: 'email@domain.tld' %>
+    </div>
+    <div class="col-xs-8 col-xs-offset-2">
+      <%= f.password_field :password, class: "form-control", placeholder: 'password' %>
+    </div>
+    <div class="col-xs-8 col-xs-offset-2">
+      <%= f.password_field :confirm_pwd, class: "form-control", placeholder: 'confirm password' %>
+    </div>
+    <div class="col-xs-8 col-xs-offset-2">
+      <%= f.submit submit_label, class: 'btn btn-primary' %>
     </div>
   <% end %>
-
-  <div class="field">
-    <%= f.label :username %><br>
-    <%= f.text_area :username %>
   </div>
-  <div class="field">
-    <%= f.label :email %><br>
-    <%= f.text_area :email %>
-  </div>
-  <div class="field">
-    <%= f.label :password %><br>
-    <%= f.text_area :password %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
-<% end %>
+</div>
