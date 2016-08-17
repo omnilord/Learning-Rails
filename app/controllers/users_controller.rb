@@ -6,10 +6,12 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   def index
-    @users = User.order(:username)
+    @users = User.order(:username).paginate(page: params[:page], per_page: 8)
   end
 
   def show
+    @user_articles = @user.articles.order(updated_at: :desc)
+                          .paginate(page: params[:page], per_page: 5)
   end
 
   def new

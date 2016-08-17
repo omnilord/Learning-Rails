@@ -1,22 +1,33 @@
 <div class="container">
-  <h2 align="center"><%= @user.username %>'s Profile</h2>
-  <div class="well well-large col-xs-8 col-xs-offset-2">
-    <div class="col-xs-8 col-xs-offset-1">
-      <strong>Email:</strong> <%= @user.email %><br/>
-      <strong>Articles:</strong> <%= @user.articles.count %><br/>
-      <strong>Comments:</strong> <%= @user.comments.count %>
+  <div class="well well-sm col-xs-8 col-xs-offset-2">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <div class="media">
+          <div class="media-left">
+            <%= avatar_for(@user, size: 80) %>
+          </div>
+          <div class="media-body">
+            <h2 align="center"><%= @user.username %>'s Profile</h2>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <strong>Email:</strong> <%= @user.email %><br/>
+        <strong>Articles:</strong> <%= @user.articles.count %><br/>
+        <strong>Comments:</strong> <%= @user.comments.count %>
+      </div>
     </div>
   </div>
 
-  <% if @user.articles.any? %>
-    <div class="well col-xs-8 col-xs-offset-2">
-    <% @user.articles.sort { |a, b| b.updated_at <=> a.updated_at }.each do |article| %>
-      <%= render 'articles/article_preview', article: article %>
-    <% end %>
-    </div>
-  <% else %>
-    <div class="col-xs-8 col-xs-offset-2">
+  <div class="well well-sm col-xs-8 col-xs-offset-2">
+    <h4 align="center"><%= @user.username %>'s Articles</h4>
+    <% if @user.articles.any? %>
+      <% @user_articles.each do |article| %>
+        <%= render 'articles/article_preview', article: article %>
+      <% end %>
+      <div align="center"><%= will_paginate @user_articles %></div>
+    <% else %>
       This user has not created any articles.
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 </div>

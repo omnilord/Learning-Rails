@@ -3,9 +3,11 @@
 
   <div class="well well-lg col-xs-8 col-xs-offset-2">
   <% if @articles.any? %>
+    <div align="center"><%= will_paginate %></div>
     <% @articles.sort { |a, b| b.updated_at <=> a.updated_at } .each do |article| %>
       <%= render 'article_preview', article: article %>
     <% end %>
+    <div align="center"><%= will_paginate %></div>
   <% else %>
     <div class="col-xs-8 col-xs-offset-2">
       There are no articles. Create a new article
