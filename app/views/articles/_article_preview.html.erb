@@ -1,7 +1,7 @@
 <div class="row">
-  <div class="well well-sm article">
-    <div class="title">
-      <%= link_to article.title, article_path(article) %>
+  <div class="panel panel-success">
+    <div class="panel-heading">
+      <h4><%= link_to article.title, article_path(article) %></h4>
       <small class="author">
         by: <%= link_to article.user.username, user_path(article.user) %>
         <span class="timing">
@@ -10,34 +10,32 @@
           (Last Updated: <%= time_ago_in_words(article.updated_at) %> ago)
           <% end %>
         </span>
-      </small>
-    </div>
-    <div class="tags">
-      <small>
-        Tags: <%= article.tags.any? ? article.tags.join(', ') : '<span style="font-style: italic;">No Tags</span>'.html_safe %>
+        <div class="tags pull-right">
+          Tags: <%= article.tags.any? ? article.tags.join(', ') : '<span style="font-style: italic;">No Tags</span>'.html_safe %>
+        </div>
       </small>
     </div>
     <% if article.comments.any? %>
-    <div class="comments">
-      <small>
-        Comments: <%= article.comments.size %>
-      </small>
-    </div>
     <% end %>
-    <div class="body">
+    <div class="panel-body">
       <%= truncate(article.body, length: 100) %>
     </div>
-    <div class="actions">
-      <%= link_to 'Edit', edit_article_path(article),
-                  class: 'btn btn-xs btn-primary',
-                  style: 'color: white;' %>&nbsp;
-      <%= link_to 'Delete', article_path(article), method: :delete,
-                  class: 'btn btn-xs btn-danger',
-                  style: 'color: white;',
-                  data: { confirm: 'Are you sure?' } %>&nbsp;
-      <%= link_to 'Comment', new_comment_path(article),
-                  class: 'btn btn-xs btn-success',
-                  style: 'color: white;' %>&nbsp;
+    <div class="panel-footer">
+        <small>
+          Comments: <%= article.comments.size %>
+        </small>
+        <div class="actions pull-right">
+          <%= link_to 'Edit', edit_article_path(article),
+                      class: 'btn btn-xs btn-primary',
+                      style: 'color: white;' %>&nbsp;
+          <%= link_to 'Delete', article_path(article), method: :delete,
+                      class: 'btn btn-xs btn-danger',
+                      style: 'color: white;',
+                      data: { confirm: 'Are you sure?' } %>&nbsp;
+          <%= link_to 'Comment', new_comment_path(article),
+                      class: 'btn btn-xs btn-success',
+                      style: 'color: white;' %>&nbsp;
+      </div>
     </div>
   </div>
 </div>

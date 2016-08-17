@@ -10,7 +10,7 @@
 
   <% if @user.articles.any? %>
     <div class="well col-xs-8 col-xs-offset-2">
-    <% @user.articles.each do |article| %>
+    <% @user.articles.sort { |a, b| b.updated_at <=> a.updated_at }.each do |article| %>
       <%= render 'articles/article_preview', article: article %>
     <% end %>
     </div>

@@ -1,5 +1,6 @@
 <div class="container">
   <h2 align="center">Published Articles</h2>
+
   <div class="well well-lg col-xs-8 col-xs-offset-2">
   <% if @articles.any? %>
     <% @articles.sort { |a, b| b.updated_at <=> a.updated_at } .each do |article| %>

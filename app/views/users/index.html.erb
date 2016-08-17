@@ -7,7 +7,14 @@
       <div class="col-xs-3">
         <div class="panel panel-success">
           <div class="panel-heading">
-            <h5><%= link_to user.username, user %></h5>
+            <div class="media">
+              <div class="media-left">
+                <%= avatar_for(user) %>
+              </div>
+              <div class="media-body">
+                <h5 class="media-heading"><%= link_to user.username, user %></h5>
+              </div>
+            </div>
           </div>
           <div class="panel-body">
             Articles: <span class="badge pull-right"><%= user.articles.length %></span><br />
@@ -16,6 +23,6 @@
         </div>
       </div>
     <% end %>
-  </div>
+    </div>
   </div>
 </div>
