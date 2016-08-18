@@ -1,8 +1,5 @@
 class UsersController < ApplicationController
 
-# @TODO: Need to setup confirm_pwd to confirm the password entered
-# @TODO: Require password to match on update by user (not admins, though)
-
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -65,6 +62,6 @@ class UsersController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def user_params
-    params.require(:user).permit(:username, :email, :password, :confirm_pwd)
+    params.require(:user).permit(:username, :email, :password, :password_confirmation)
   end
 end
