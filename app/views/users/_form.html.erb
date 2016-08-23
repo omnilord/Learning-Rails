@@ -8,19 +8,19 @@
   <div class="form-group">
   <%= form_for @user do |f| %>
     <div class="col-xs-8 col-xs-offset-2">
-      <%= f.text_field :username, class: "form-control", placeholder: 'Username' %>
+      <%= f.text_field :username, class: 'form-control', placeholder: 'Username' %>
     </div>
     <div class="col-xs-8 col-xs-offset-2">
-      <%= f.text_field :email, class: "form-control", placeholder: 'email@domain.tld' %>
+      <%= f.text_field :email, class: 'form-control', placeholder: 'email@domain.tld' %>
     </div>
     <div class="col-xs-8 col-xs-offset-2">
-      <%= f.password_field :password, class: "form-control", placeholder: 'password' %>
+      <%= f.password_field :password, class: 'form-control', placeholder: 'password' %>
     </div>
     <div class="col-xs-8 col-xs-offset-2">
-      <%= f.password_field :password_confirmation, class: "form-control", placeholder: 'confirm password' %>
+      <%= f.password_field :password_confirmation, class: 'form-control', placeholder: 'confirm password' %>
     </div>
-    <div class="col-xs-8 col-xs-offset-2">
-      <%= f.submit submit_label, class: 'btn btn-primary' %>
+    <div class="col-xs-8 col-xs-offset-2" align="center">
+      <%= f.submit submit_label, class: 'btn btn-sm btn-primary' %>
     </div>
   <% end %>
   </div>

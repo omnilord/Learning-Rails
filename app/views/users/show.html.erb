@@ -23,7 +23,7 @@
     <h4 align="center"><%= @user.username %>'s Articles</h4>
     <% if @user.articles.any? %>
       <% @user_articles.each do |article| %>
-        <%= render 'articles/article_preview', article: article %>
+        <%= render 'articles/article', article: article, preview: true %>
       <% end %>
       <div align="center"><%= will_paginate @user_articles %></div>
     <% else %>

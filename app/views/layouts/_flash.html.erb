@@ -1,7 +1,9 @@
 <% if flash.any? %>
-  <ul>
+  <div class="row flash">
   <% flash.each do |n, m| %>
-    <li class="<%= n %>"><%= html_escape(m) %></li>
+    <div class="col-xs-12 label label-<%= n %> flash-msg" align="center">
+      <%= html_escape(m) %>
+    </div>
   <% end %>
-  </ul>
+  </div>
 <% end %>

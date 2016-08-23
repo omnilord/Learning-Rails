@@ -42,3 +42,15 @@ footer {
   margin: 0;
   margin-bottom: 5px;
 }
+
+.user-panel .data-point:nth-child(1n) {
+  margin-top: 2px;
+}
+
+.flash {
+  margin-bottom: 8px;
+
+  .flash-msg {
+    padding: 10px;
+  }
+}

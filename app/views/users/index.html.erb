@@ -5,7 +5,7 @@
     <div class="row">
     <% @users.each do |user| %>
       <div class="col-xs-3">
-        <div class="panel panel-success">
+        <div class="panel panel-success user-panel">
           <div class="panel-heading">
             <div class="media">
               <div class="media-left">
@@ -17,8 +17,8 @@
             </div>
           </div>
           <div class="panel-body">
-            Articles: <span class="badge pull-right"><%= user.articles.length %></span><br />
-            Comments: <span class="badge pull-right"><%= user.comments.length %></span>
+            <div class="data-point">Articles: <span class="badge pull-right"><%= user.articles.length %></span></div>
+            <div class="data-point">Comments: <span class="badge pull-right"><%= user.comments.length %></span></div>
           </div>
         </div>
       </div>

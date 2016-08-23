@@ -1,41 +1,8 @@
 <div class="container">
-  <h2 align="center"><%= @article[:title].html_safe %></h2>
-  <div class="col-xs-8 col-xs-offset-2">
-    <small class="author">
-      <b>by:</b> <%= link_to @article.user.username, user_path(@article.user) %>
-      <span class="timing">
-        <%= time_ago_in_words(@article.created_at) %> ago
-        <% if @article.created_at != @article.updated_at %>
-        (Last Updated: <%= time_ago_in_words(@article.updated_at) %> ago)
-        <% end %>
-      </span>
-    </small>
-  </div>
-  <div class="col-xs-4 col-xs-offset-2">
-    <small>
-      <b>Tags:</b>
-      <% if @article[:tags].any? %>
-        <%= @article[:tags].map { |tag| tag.html_safe }.join(', ') %>
-      <% else %>
-        <span style="font-style: italic;">No Tags</span>
-      <% end %>
-    </small>
-  </div>
-  <div class="col-xs-4" align="right">
-    <%= link_to 'edit', edit_article_path(@article),
-                class: 'btn btn-xs btn-primary',
-                style: 'color: white;' %>
-    <%= link_to 'delete', article_path(@article), method: :delete,
-                class: 'btn btn-xs btn-danger',
-                style: 'color: white;',
-                data: { confirm: 'Are you sure you want to delete this article?' } %>
-  </div>
-  <div class="col-xs-8 col-xs-offset-2">
-    <div class="well"><%= @article[:body].html_safe %></div>
-  </div>
+  <%= render 'article', article: @article %>
   <% if @article.comments.any? %>
-  <div class="col-xs-4 col-xs-offset-2">
-    <b><%= "#{pluralize(@article.comments.size, 'Comment')}" %>:</b>
+  <div class="col-xs-8 col-xs-offset-2">
+    <h4 align="center">Comments</h4>
   </div>
   <div class="col-xs-8 col-xs-offset-2">
     <% @article.comments.each do |comment| %>

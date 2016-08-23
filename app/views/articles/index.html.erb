@@ -5,7 +5,7 @@
   <% if @articles.any? %>
     <div align="center"><%= will_paginate %></div>
     <% @articles.sort { |a, b| b.updated_at <=> a.updated_at } .each do |article| %>
-      <%= render 'article_preview', article: article %>
+      <%= render 'article', article: article, preview: true %>
     <% end %>
     <div align="center"><%= will_paginate %></div>
   <% else %>

@@ -1,0 +1,23 @@
+<br />
+<div class="container">
+  <div class="col-xs-6 col-xs-offset-3">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 align="center">Recover Login</h3>
+      </div>
+      <div class="panel-body">
+        <div class="form-group">
+          <%= form_for :session, url: recover_login_path do |f| %>
+            <div class="col-xs-12" align="center">
+              <%= f.text_field :email, class: 'form-control', placeholder: 'email@domain.tld' %>
+            </div>
+            <div class="col-xs-12" align="center">
+              <hr />
+              <%= f.submit 'Login', class: 'btn btn-sm btn-primary' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

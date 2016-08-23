@@ -2,8 +2,16 @@ Rails.application.routes.draw do
   root 'pages#index', layout: 'application'
 
   get 'about' => 'pages#about'
+  get 'careers' => 'pages#careers'
+  get 'recover_login' => 'pages#recover'
+  #get '/:page' => 'pages#%{page}'
+
   get 'signup' => 'users#new'
-  get 'login' => 'users#authenticate'
+  get 'login' => 'sessions#new'
+  post 'login' => 'sessions#create'
+  get 'change_password' => 'users#change_password'
+  post 'change_password' => 'users#update_password'
+  delete 'logout' => 'sessions#destroy'
 
   resources :comments
   resources :users
