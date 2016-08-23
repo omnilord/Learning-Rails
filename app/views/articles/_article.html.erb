@@ -18,18 +18,20 @@
     <% if article.comments.any? %>
     <% end %>
     <div class="panel-body">
-      <%= (preview ||= false) ? truncate(article.body, length: 100) : article.body %>
+      <%= (preview ||= false) ? truncate(article.body, length: 100) : sanitize(article.body.gsub(/\n/, '<br/>'), tags: ['br']) %>
     </div>
     <div class="panel-footer">
       <small><%= "#{pluralize(article.comments.size, 'Comment')}" %></small>
       <div class="actions pull-right">
-        <%= link_to 'Edit', edit_article_path(article),
-                    class: 'btn btn-xs btn-primary',
-                    style: 'color: white;' %>&nbsp;
-        <%= link_to 'Delete', article_path(article), method: :delete,
-                    class: 'btn btn-xs btn-danger',
-                    style: 'color: white;',
-                    data: { confirm: 'Are you sure?' } %>&nbsp;
+        <% if edit_allowed? article %>
+          <%= link_to 'Edit', edit_article_path(article),
+                      class: 'btn btn-xs btn-primary',
+                      style: 'color: white;' %>&nbsp;
+          <%= link_to 'Delete', article_path(article), method: :delete,
+                      class: 'btn btn-xs btn-danger',
+                      style: 'color: white;',
+                      data: { confirm: 'Are you sure?' } %>&nbsp;
+        <% end %>
         <%= link_to 'Comment', new_comment_path(article),
                     class: 'btn btn-xs btn-success',
                     style: 'color: white;' %>&nbsp;
