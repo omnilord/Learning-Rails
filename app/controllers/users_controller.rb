@@ -73,7 +73,7 @@ class UsersController < ApplicationController
   end
 
   def edit_allowed?(user_id = @user.id)
-    logged_in? && user_id == current_user.id
+    logged_in? && (user_id == current_user.id || current_user.privilege > 3)
   end
 
   def allow_edit

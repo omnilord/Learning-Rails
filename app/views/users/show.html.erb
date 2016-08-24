@@ -7,7 +7,7 @@
             <%= avatar_for(@user, size: 80) %>
           </div>
           <div class="media-body">
-            <% if logged_in? && @user.id == current_user.id %>
+            <% if edit_allowed? %>
               <%= link_to 'Edit', edit_user_path(@user), class: 'btn btn-xs btn-info pull-right' %>
             <% end %>
             <h2 align="center">
@@ -19,7 +19,8 @@
       <div class="panel-body">
         <strong>Email:</strong> <%= @user.email %><br/>
         <strong>Articles:</strong> <%= @user.articles.count %><br/>
-        <strong>Comments:</strong> <%= @user.comments.count %>
+        <strong>Comments:</strong> <%= @user.comments.count %><br/>
+        <strong>Privilege:</strong> <%= @user.privilege_level %>
       </div>
     </div>
   </div>
@@ -31,8 +32,10 @@
         <%= render 'articles/article', article: article, preview: true %>
       <% end %>
       <div align="center"><%= will_paginate @user_articles %></div>
-    <% else %>
+    <% elsif @user.privilege > 1 %>
       This user has not created any articles.
+    <% else %>
+      This user cannot create articles at this time.
     <% end %>
   </div>
 </div>

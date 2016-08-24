@@ -1,8 +1,11 @@
 <% if flash.any? %>
   <div class="row flash">
   <% flash.each do |n, m| %>
-    <div class="col-xs-12 label label-<%= n %> flash-msg" align="center">
-      <%= html_escape(m) %>
+    <div class="col-xs-10 col-xs-offset-1 alert alert-<%= n %> flash-msg">
+      <a href="#" class="close" data-dismiss="alert">&#215;</a>
+      <ul>
+        <%= Array(m).map { |s| "<li>#{sanitize(s)}</li>" }.join('').html_safe %>
+      </ul>
     </div>
   <% end %>
   </div>

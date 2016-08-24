@@ -1,0 +1,7 @@
+<ul class="dropdown-menu">
+  <li><%= link_to 'List Articles', articles_path %></a></li>
+  <% if logged_in? && current_user.privilege > 1 %>
+    <li role="separator" class="divider"></li>
+    <li><%= link_to 'New Article', new_article_path %></a></li>
+  <% end %>
+</ul>
