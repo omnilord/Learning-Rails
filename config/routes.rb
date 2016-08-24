@@ -16,6 +16,10 @@ Rails.application.routes.draw do
   resources :comments
   resources :users
   resources :articles
+
+  # Catch all to prevent 404 errors from rendering a sad face page
+  get '*path', to: 'pages#index'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

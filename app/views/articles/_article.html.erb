@@ -23,18 +23,21 @@
     <div class="panel-footer">
       <small><%= "#{pluralize(article.comments.size, 'Comment')}" %></small>
       <div class="actions pull-right">
-        <% if edit_allowed? article %>
+        <% if edit_allowed? article.user_id %>
           <%= link_to 'Edit', edit_article_path(article),
                       class: 'btn btn-xs btn-primary',
-                      style: 'color: white;' %>&nbsp;
+                      style: 'color: white;' %>
+          &nbsp;
           <%= link_to 'Delete', article_path(article), method: :delete,
                       class: 'btn btn-xs btn-danger',
                       style: 'color: white;',
-                      data: { confirm: 'Are you sure?' } %>&nbsp;
+                      data: { confirm: 'Are you sure?' } %>
+          &nbsp;
         <% end %>
         <%= link_to 'Comment', new_comment_path(article),
                     class: 'btn btn-xs btn-success',
-                    style: 'color: white;' %>&nbsp;
+                    style: 'color: white;' %>
+        &nbsp;
       </div>
     </div>
   </div>

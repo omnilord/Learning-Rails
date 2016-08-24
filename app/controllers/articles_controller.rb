@@ -3,6 +3,9 @@ class ArticlesController  < ApplicationController
   before_action :set_article, only: [:edit, :update, :show, :destroy]
   before_action only: [:new, :create] { |c| c.require_user(articles_path) }
   before_action only: [:edit, :update, :destroy]  { |c| c.require_user(article_path(@article)) }
+  before_action :allow_edit, only: [:edit]
+
+  helper_method :edit_allowed?
 
   def set_article
     @article = Article.find(params[:id])
@@ -21,7 +24,7 @@ class ArticlesController  < ApplicationController
 
   def create
     @article = Article.new(article_params)
-    @article.user_id = current_user.id
+    @article.user = current_user
     if @article.save
       flash[:success] = 'Article successfully saved!'
       redirect_to article_path(@article)
@@ -48,9 +51,18 @@ class ArticlesController  < ApplicationController
   def show
   end
 
+
   private
 
   def article_params
     params.require(:article).permit(:title, :body, :tags => [])
+  end
+
+  def edit_allowed?(user_id = @article.user_id)
+    user_id == current_user.id
+  end
+
+  def allow_edit
+    redirect_to article_path(@article) unless edit_allowed?
   end
 end

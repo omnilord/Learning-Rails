@@ -1,13 +1,16 @@
 class UsersController < ApplicationController
 
   before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action only: [:show, :edit, :update, :destroy] { |c| c.require_user(user_path(@user)) }
+  before_action :allow_edit, only: [:edit, :update, :destroy]
+
+  helper_method :edit_allowed?
 
   def index
     @users = User.order(:username).paginate(page: params[:page], per_page: 8)
   end
 
   def show
-    current_user
     @user_articles = @user.articles.order(updated_at: :desc)
                           .paginate(page: params[:page], per_page: 5)
   end
@@ -58,15 +61,22 @@ class UsersController < ApplicationController
   end
 
 
+
   private
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_user
     @user = User.find(params[:id])
   end
 
-  # Never trust parameters from the scary internet, only allow the white list through.
   def user_params
     params.require(:user).permit(:username, :email, :password, :password_confirmation)
+  end
+
+  def edit_allowed?(user_id = @user.id)
+    user_id == current_user.id
+  end
+
+  def allow_edit
+    redirect_to user_path(@user) unless edit_allowed?
   end
 end
