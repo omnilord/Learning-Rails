@@ -59,7 +59,7 @@ class ArticlesController  < ApplicationController
   end
 
   def edit_allowed?(user_id = @article.user_id)
-    user_id == current_user.id
+    logged_in? && user_id == current_user.id
   end
 
   def allow_edit

@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   before_action :set_user, only: [:show, :edit, :update, :destroy]
-  before_action only: [:show, :edit, :update, :destroy] { |c| c.require_user(user_path(@user)) }
+  before_action only: [:edit, :update, :destroy] { |c| c.require_user(user_path(@user)) }
   before_action :allow_edit, only: [:edit, :update, :destroy]
 
   helper_method :edit_allowed?
@@ -73,7 +73,7 @@ class UsersController < ApplicationController
   end
 
   def edit_allowed?(user_id = @user.id)
-    user_id == current_user.id
+    logged_in? && user_id == current_user.id
   end
 
   def allow_edit
