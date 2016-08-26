@@ -3,9 +3,11 @@ class ArticlesController  < ApplicationController
   before_action :set_article, only: [:edit, :update, :show, :destroy]
   before_action only: [:new, :create] { |c| c.require_user(articles_path) }
   before_action only: [:edit, :update, :destroy]  { |c| c.require_user(article_path(@article)) }
-  before_action :allow_edit, only: [:edit]
+  before_action :allow_edit, only: [:edit, :update]
+  before_action :allow_destroy, only: [:destroy]
 
-  helper_method :edit_allowed?
+
+  helper_method :edit_allowed?, :destroy_allowed?
 
   def set_article
     @article = Article.find(params[:id])
@@ -59,10 +61,18 @@ class ArticlesController  < ApplicationController
   end
 
   def edit_allowed?(user_id = @article.user_id)
-    logged_in? && (user_id == current_user.id || current_user.privilege > 2)
+    logged_in? && (user_id == current_user.id || current_user.privilege >= User::PRIV_SR_USER)
   end
 
   def allow_edit
     redirect_to article_path(@article) unless edit_allowed?
+  end
+
+  def destroy_allowed?(user_id = @article.user_id)
+    logged_in? && (user_id == current_user.id || current_user.privilege >= User::PRIV_MOD)
+  end
+
+  def allow_destroy
+    redirect_to user_path(@user) unless destroy_allowed?
   end
 end

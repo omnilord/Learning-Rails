@@ -21,4 +21,8 @@ class Article < ActiveRecord::Base
       end
     end
   end
+
+  def tags=(list)
+    write_attribute :tags, list.uniq.sort
+  end
 end

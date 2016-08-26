@@ -2,9 +2,10 @@ class UsersController < ApplicationController
 
   before_action :set_user, only: [:show, :edit, :update, :destroy]
   before_action only: [:edit, :update, :destroy] { |c| c.require_user(user_path(@user)) }
-  before_action :allow_edit, only: [:edit, :update, :destroy]
+  before_action :allow_edit, only: [:edit, :update]
+  before_action :allow_destroy, only: [:destroy]
 
-  helper_method :edit_allowed?
+  helper_method :edit_allowed?, :destroy_allowed?
 
   def index
     @users = User.order(:username).paginate(page: params[:page], per_page: 8)
@@ -73,10 +74,23 @@ class UsersController < ApplicationController
   end
 
   def edit_allowed?(user_id = @user.id)
-    logged_in? && (user_id == current_user.id || current_user.privilege > 3)
+    logged_in? && (user_id == current_user.id || current_user.privilege >= User::PRIV_SR_MOD)
   end
 
   def allow_edit
     redirect_to user_path(@user) unless edit_allowed?
+  end
+
+  def destroy_allowed?(user_id = @user.id)
+    if user_id == 1
+      flash[:danger] = "Root administrator cannot be destroyed.  All glory to Admin!"
+      false
+    else
+      logged_in? && (user_id == current_user.id || current_user.privilege == User::PRIV_ADMIN)
+    end
+  end
+
+  def allow_destroy
+    redirect_to user_path(@user) unless destroy_allowed?
   end
 end

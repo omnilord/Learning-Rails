@@ -28,6 +28,8 @@
                       class: 'btn btn-xs btn-primary',
                       style: 'color: white;' %>
           &nbsp;
+        <% end %>
+        <% if destroy_allowed? article.user_id %>
           <%= link_to 'Delete', article_path(article), method: :delete,
                       class: 'btn btn-xs btn-danger',
                       style: 'color: white;',

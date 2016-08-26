@@ -8,7 +8,15 @@
           </div>
           <div class="media-body">
             <% if edit_allowed? %>
-              <%= link_to 'Edit', edit_user_path(@user), class: 'btn btn-xs btn-info pull-right' %>
+              <%= link_to 'Edit', edit_user_path(@user),
+                      class: 'btn btn-xs btn-info pull-right',
+                      style: 'color: white;'  %>
+            <% end %>
+            <% if destroy_allowed? %>
+              <%= link_to 'Delete', user_path(@user), method: :delete,
+                      class: 'btn btn-xs btn-danger pull-right',
+                      style: 'color: white;',
+                      data: { confirm: 'Are you sure?' } %>
             <% end %>
             <h2 align="center">
               <%= @user.username %>'s Profile
