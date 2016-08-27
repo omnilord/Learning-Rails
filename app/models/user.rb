@@ -16,12 +16,12 @@ class User < ActiveRecord::Base
   has_many :comments, dependent: :destroy
   has_many :articles, dependent: :destroy
 
-  validates_confirmation_of :password
-
   validates :username, presence: true, uniqueness: { case_sensitive: false },
             length: { minimum: 3, maximum: 25 }
   validates :email, presence: true, uniqueness: { case_sensitive: false }
   validates_format_of :email, with: /\A[^@]+@[^@]+\z/
+
+  validates_confirmation_of :password, if: :password_digest_changed?
   has_secure_password
 
   def email=(val)
