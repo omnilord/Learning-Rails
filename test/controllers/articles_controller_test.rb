@@ -56,10 +56,12 @@ class ArticlesControllerTest < ActionController::TestCase
 
   test 'articles#delete should remove the chosen article, but leave the rest' do
     session[:user_id] = @user.id
-    @article = Article.create(title: 'Valid title 1', body: 'This is a valid body.', user: @user)
-    @article = Article.create(title: 'Valid title 2', body: 'This is a valid body.', user: @user)
-    @article = Article.create(title: 'Valid title 3', body: 'This is a valid body.', user: @user)
-    delete_id = @article.id
+    Article.create([
+      { title: 'Valid title 1', body: 'This is a valid body.', user: @user },
+      { title: 'Valid title 2', body: 'This is a valid body.', user: @user },
+      { title: 'Valid title 3', body: 'This is a valid body.', user: @user }
+    ])
+    delete_id = Article.last.id
     assert_difference 'Article.count', -1 do
       delete :destroy, id: delete_id
     end
