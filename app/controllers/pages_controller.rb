@@ -7,4 +7,7 @@ class PagesController < ApplicationController
 
   def careers
   end
+
+  def banned
+  end
 end

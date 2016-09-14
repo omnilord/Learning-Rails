@@ -1,6 +1,7 @@
 class SessionsController < ApplicationController
 
-  # @TODO: Back sessions with JSON in the database, NOT Base64-encoded contents
+  # @TODO: Back sessions with JSON in the database, NOT Base64-encoded
+  #        encrypted cookies
 
   def new
   end

@@ -8,9 +8,18 @@ class ApplicationController < ActionController::Base
   helper_method :current_user, :logged_in?
 
   before_action :current_user
+  before_action :redirect_banned_user
 
   def current_user
     @authenticated_user ||= (session[:user_id] ? User.find(session[:user_id]) : nil)
+  end
+
+  def redirect_banned_user
+    if @authenticated_user &&
+        @authenticated_user.privilege == User::PRIV_NONE &&
+        request.path != '/banned'
+      redirect_to '/banned'
+    end
   end
 
   def logged_in?

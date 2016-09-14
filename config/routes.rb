@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get 'about' => 'pages#about'
   get 'careers' => 'pages#careers'
   get 'recover_login' => 'pages#recover'
+  get 'banned' => 'pages#banned'
   #get '/:page' => 'pages#%{page}'
 
   get 'signup' => 'users#new'
