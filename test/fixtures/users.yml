@@ -1,11 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  username: MyText
-  email: MyText
-  password: MyText
+banned_user:
+  username: Banned
+  email: banned@banningLosers.org
+  password_digest: <%= BCrypt::Password.create("password", cost: 4) %>
+  privilege: 0
 
-two:
-  username: MyText
-  email: MyText
-  password: MyText
+article_user:
+  username: ArticleGuy
+  email: fred@flintstone.com
+  password_digest: <%= BCrypt::Password.create("password", cost: 4) %>
+  privilege: 2
