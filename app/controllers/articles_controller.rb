@@ -9,10 +9,6 @@ class ArticlesController  < ApplicationController
 
   helper_method :edit_allowed?, :destroy_allowed?
 
-  def set_article
-    @article = Article.find(params[:id])
-  end
-
   def index
     @articles = Article.order(updated_at: :desc).paginate(page: params[:page], per_page: 10)
   end
@@ -53,8 +49,24 @@ class ArticlesController  < ApplicationController
   def show
   end
 
+  def tags
+    @tags = Tag.order(volume: :desc).paginate(page: params[:page], per_page: 48)
+  end
+
+  def tag
+    t = params[:tag]
+    @tag = Tag.find_by_tag(t)
+    @articles = Article.where('? = ANY (tags)', t)
+                       .order(updated_at: :desc)
+                       .paginate(page: params[:page], per_page: 10)
+  end
+
 
   private
+
+  def set_article
+    @article = Article.find(params[:id])
+  end
 
   def article_params
     params.require(:article).permit(:title, :body, :tags => [])

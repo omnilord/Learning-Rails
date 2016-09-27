@@ -1,5 +1,11 @@
 <div class="container">
-  <h2 align="center">Published Articles</h2>
+  <h2 align="center">
+    <%= pluralize(@tag[:volume], 'Article') %> for
+    "<strong><em>
+      <%= @tag[:tag] %>
+      <span class="badget"></span>
+    </em></strong>"
+  </h2>
 
   <div class="well well-lg col-xs-8 col-xs-offset-2">
     <% if @articles.any? %>

@@ -11,7 +11,13 @@
           <% end %>
         </span>
         <div class="tags pull-right">
-          Tags: <%= article.tags.any? ? article.tags.join(', ') : '<span style="font-style: italic;">No Tags</span>'.html_safe %>
+          Tags: <span style="font-style: italic;">
+          <% if article.tags.any? %>
+            <%= article.tags.map { |tag| link_to(tag, tag_path(tag)).html_safe }.join(', ').html_safe %>
+          <% else %>
+            No Tags
+          <% end %>
+          </span>
         </div>
       </small>
     </div>

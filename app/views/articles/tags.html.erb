@@ -1,0 +1,25 @@
+<div class="container">
+  <h2 align="center">Article Tags</h2>
+  <% if @tags.any? %>
+    <div class="row">
+      <div class="col-xs-8 col-xs-offset-2">
+        <% @tags.each do |tag| %>
+          <div class="col-xl-2 col-lg-3 col-sm-6 col-xs-12">
+            <a href="<%= tags_path %>/<%= tag[:tag] %>" class="btn btn-xs btn-block">
+              <%= tag[:tag] %> <span class="badge pull-right"><%= tag[:volume] %></span>
+            </a>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-4 col-xs-offset-5">
+        <%= will_paginate @tags, page_links: false %>
+      </div>
+    </div>
+  <% else %>
+    <div class="col-xs-8 col-xs-offset-2">
+      No Tags
+    </div>
+  <% end %>
+</div>

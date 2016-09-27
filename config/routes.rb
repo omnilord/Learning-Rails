@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   resources :comments
   resources :users
   resources :articles
+  get 'tags' => 'articles#tags'
+  get 'tags/:tag' => 'articles#tag', as: 'tag'
 
   # Catch all to prevent 404 errors from rendering a sad face page
   get '*path', to: 'pages#index'
