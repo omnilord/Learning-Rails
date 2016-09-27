@@ -53,11 +53,16 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    @user.destroy
-    flash[:success] = 'User was successfully destroyed.'
-    respond_to do |format|
-      format.html { redirect_to users_url, success: 'User was successfully destroyed.' }
-      format.json { head :no_content }
+    if @user[:id] == 1
+      flash[:danger] = "Root administrator cannot be destroyed.  All glory to Admin!"
+      redirect_to user_path(@user)
+    else
+      @user.destroy
+      flash[:success] = 'User was successfully destroyed.'
+      respond_to do |format|
+        format.html { redirect_to users_url, success: 'User was successfully destroyed.' }
+        format.json { head :no_content }
+      end
     end
   end
 
@@ -82,12 +87,9 @@ class UsersController < ApplicationController
   end
 
   def destroy_allowed?(user_id = @user.id)
-    if user_id == 1
-      flash[:danger] = "Root administrator cannot be destroyed.  All glory to Admin!"
-      false
-    else
-      logged_in? && (user_id == current_user.id || current_user.privilege == User::PRIV_ADMIN)
-    end
+    user_id != 1 &&
+      logged_in? &&
+      (user_id == current_user.id || current_user.privilege == User::PRIV_ADMIN)
   end
 
   def allow_destroy
