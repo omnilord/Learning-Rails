@@ -2,6 +2,7 @@
 
 <div class="form-group">
 <%= form_for @article do |f| %>
+  <input type="hidden" name="tags_check" value="<%= @tags.join('||') %>" />
   <div class="col-xs-8 col-xs-offset-2">
     <%= f.text_field :title, class: 'form-control', placeholder: 'Title of Article' %><br />
   </div>
@@ -11,7 +12,7 @@
   <div class="col-xs-8 col-xs-offset-2">
     <fieldset>
       <legend>Tags</legend>
-      <% %w{A B C D E F}.each do |tag| %>
+      <% @tags.each do |tag| %>
       <label><%= f.check_box(:tags, { multiple: true }, tag, nil) << tag %></label>
       <% end %>
     </fieldset>

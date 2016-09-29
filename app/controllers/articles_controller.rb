@@ -1,6 +1,7 @@
 class ArticlesController  < ApplicationController
 
   before_action :set_article, only: [:edit, :update, :show, :destroy]
+  before_action :set_tags, only: [:new, :edit]
   before_action only: [:new, :create] { |c| c.require_user(articles_path) }
   before_action only: [:edit, :update, :destroy]  { |c| c.require_user(article_path(@article)) }
   before_action :allow_edit, only: [:edit, :update]
@@ -32,7 +33,9 @@ class ArticlesController  < ApplicationController
   end
 
   def update
-    if @article.update(article_params)
+    aParams = article_params
+    aParams[:tags] = nil if aParams[:tags].nil? && params[:tags_check] != ''
+    if @article.update(aParams)
       flash[:success] = 'Article successfully updated!'
       redirect_to article_path(@article)
     else
@@ -50,7 +53,7 @@ class ArticlesController  < ApplicationController
   end
 
   def tags
-    @tags = Tag.order(volume: :desc).paginate(page: params[:page], per_page: 48)
+    @tags = Tag.order(volume: :desc, tag: :asc).paginate(page: params[:page], per_page: 48)
   end
 
   def tag
@@ -66,6 +69,10 @@ class ArticlesController  < ApplicationController
 
   def set_article
     @article = Article.find(params[:id])
+  end
+
+  def set_tags
+    @tags = Tag.order(volume: :desc, tag: :asc).map { |t| t[:tag] }
   end
 
   def article_params
