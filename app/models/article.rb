@@ -22,7 +22,23 @@ class Article < ActiveRecord::Base
     end
   end
 
-  def tags=(list)
-    write_attribute :tags, list.uniq.sort
+  def tags=(list = [])
+    if list.nil?
+      list = []
+    else
+      list.uniq!
+      list.sort!
+    end
+
+    # Monkey patching the tags list since ActiveRecord does not default to Set
+    # Does an implicit uniq and sort so that looping ops do not get repeated
+    class <<list
+      def <<(s)
+        self.replace(self.take_while { |el| (el <=> s) < 1 } | [s] | self) unless self.include? s
+        self
+      end
+    end
+
+    write_attribute(:tags, list) unless list.eql?(self[:tags])
   end
 end
