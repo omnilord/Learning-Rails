@@ -54,3 +54,11 @@ footer {
     padding: 10px;
   }
 }
+
+.btn.tag-button {
+  border: 1px solid black;
+
+  &:hover {
+    background-color: #80ee80;
+  }
+}
