@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
   def redirect_banned_user
     if @authenticated_user &&
         @authenticated_user.privilege == User::PRIV_NONE &&
-        request.path != '/banned'
+        request.path != '/banned' && request.path != '/logout'
       redirect_to '/banned'
     end
   end

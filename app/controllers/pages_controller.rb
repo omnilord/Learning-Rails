@@ -9,5 +9,8 @@ class PagesController < ApplicationController
   end
 
   def banned
+    if !@authenticated_user || @authenticated_user.privilege != User::PRIV_NONE
+      redirect_to root_path
+    end
   end
 end
