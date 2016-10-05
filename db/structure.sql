@@ -285,6 +285,15 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 
 --
+-- Name: prevent_populated_tag_deletion_on_delete; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE prevent_populated_tag_deletion_on_delete AS
+    ON DELETE TO tags
+   WHERE (old.volume > 0) DO INSTEAD NOTHING;
+
+
+--
 -- Name: maintain_tag_counts_on_delete; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -350,4 +359,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160824061854');
 INSERT INTO schema_migrations (version) VALUES ('20160919145900');
 
 INSERT INTO schema_migrations (version) VALUES ('20160927153130');
+
+INSERT INTO schema_migrations (version) VALUES ('20161004175552');
 

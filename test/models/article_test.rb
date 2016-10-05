@@ -168,5 +168,14 @@ class ArticleTest < ActiveSupport::TestCase
       assert tag[:volume] == 3, 'Did not update volume for ' << tag[:tag] if tag[:tag] == 'bar'
       assert ['mlem', 'derp', 'foo', 'bar'].include?(tag[:tag]), 'Unexpected tag found: ' << tag[:tag]
     end
+
+    # Test the trigger to prevent deleting Tags associated with articles
+    assert_difference 'Tag.count', -1, 'A tag with a volume of 0 can be deleted.' do
+      Tag.find('mlem').destroy
+    end
+
+    assert_no_difference  'Tag.count', 'A tag with a volume greater than 0 cannot be deleted' do
+      Tag.find('derp').destroy
+    end
   end
 end
