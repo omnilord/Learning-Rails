@@ -3,6 +3,7 @@ ruby '2.3.0';
 
 gem 'rails', '4.2.4'
 gem 'pg', '~> 0.15'
+gem 'email_validator'
 
 gem 'bootstrap-sass', '~> 3.3.6'
 gem 'sass-rails', '~> 5.0'
