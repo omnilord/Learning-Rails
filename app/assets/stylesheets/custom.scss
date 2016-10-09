@@ -1,0 +1,64 @@
+$navbar-default-bg: #272;
+$navbar-default-color-global: #53ee53;
+$navbar-default-color: $navbar-default-color-global;
+$navbar-default-link-color: $navbar-default-color-global;
+$navbar-default-link-hover-color: $navbar-default-color-global;
+$navbar-default-link-active-color: $navbar-default-color-global;
+
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+#navlogo {
+  position: relative;
+  top: -10px;
+}
+
+footer {
+  margin-top: 45px;
+  padding-top: 5px;
+  border-top: 1px solid black;
+  color: #555;
+
+  a:hover {
+    font-weight: bold;
+  }
+
+  small {
+    float: left;
+  }
+
+  ul {
+    float: right;
+    list-style: none;
+
+    li {
+      float: left;
+      margin-left: 15px;
+    }
+  }
+}
+
+.pagination {
+  margin: 0;
+  margin-bottom: 5px;
+}
+
+.user-panel .data-point:nth-child(1n) {
+  margin-top: 2px;
+}
+
+.flash {
+  margin-bottom: 8px;
+
+  .flash-msg {
+    padding: 10px;
+  }
+}
+
+.btn.tag-button {
+  border: 1px solid black;
+
+  &:hover {
+    background-color: #80ee80;
+  }
+}
