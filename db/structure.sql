@@ -166,6 +166,36 @@ CREATE TABLE schema_migrations (
 
 
 --
+-- Name: searches; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW searches AS
+ SELECT (articles.id)::text AS searchable_id,
+    'Article'::text AS searchable_type,
+    'body'::text AS searchable_field,
+    articles.body AS term
+   FROM articles
+UNION
+ SELECT (articles.id)::text AS searchable_id,
+    'Article'::text AS searchable_type,
+    'title'::text AS searchable_field,
+    articles.title AS term
+   FROM articles
+UNION
+ SELECT (comments.id)::text AS searchable_id,
+    'Comment'::text AS searchable_type,
+    'body'::text AS searchable_field,
+    comments.body AS term
+   FROM comments
+UNION
+ SELECT (articles.id)::text AS searchable_id,
+    'Article'::text AS searchable_type,
+    'tags'::text AS searchable_field,
+    unnest(articles.tags) AS term
+   FROM articles;
+
+
+--
 -- Name: tags; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -261,6 +291,34 @@ ALTER TABLE ONLY tags
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: gin_on_articles_body; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX gin_on_articles_body ON articles USING gin (to_tsvector('english'::regconfig, body));
+
+
+--
+-- Name: gin_on_articles_title; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX gin_on_articles_title ON articles USING gin (to_tsvector('english'::regconfig, (title)::text));
+
+
+--
+-- Name: gin_on_comments_body; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX gin_on_comments_body ON comments USING gin (to_tsvector('english'::regconfig, body));
+
+
+--
+-- Name: gin_on_tags_body; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX gin_on_tags_body ON tags USING gin (to_tsvector('english'::regconfig, tag));
 
 
 --
@@ -361,4 +419,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160919145900');
 INSERT INTO schema_migrations (version) VALUES ('20160927153130');
 
 INSERT INTO schema_migrations (version) VALUES ('20161004175552');
+
+INSERT INTO schema_migrations (version) VALUES ('20161012040537');
 
