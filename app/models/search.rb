@@ -1,5 +1,13 @@
 class Search < ActiveRecord::Base
 
+  class <<self
+    def query(q)
+      self.select('searchable_id, searchable_type')
+          .where('term @@ to_tsquery(?)', q)
+          .group('searchable_type, searchable_id')
+    end
+  end
+
   # Search records are never modified
   def readonly?
     true

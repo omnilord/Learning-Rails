@@ -1,0 +1,55 @@
+<div class="container">
+  <div class="well well-lg col-xs-8 col-xs-offset-2">
+    <div class="row">
+      <h3>Search Results for: <strong><%= @term %></strong></h3>
+    </div>
+    <div class="row">
+      <div align="center"><%= will_paginate %></div>
+    </div>
+    <%
+      @search.each do |r|
+        src_obj = r.source
+        # really, this should just render articles/article or comments/comment
+        # but there are complications with the permissions functionality
+    %>
+      <div class="row">
+        <div class="panel panel-success">
+          <div class="panel-heading">
+            <% if r.searchable_type == 'Article' %>
+              <h4><%= link_to src_obj.title, article_path(src_obj) %></h4>
+            <% else %>
+              <h4><%= link_to "Re: #{src_obj.article.title}", comment_path(src_obj) %></h4>
+            <% end %>
+            <small class="author">
+              <%= r.searchable_type %>
+              by: <%= link_to src_obj.user.username, user_path(src_obj.user) %>
+              <span class="timing">
+                <%= time_ago_in_words(src_obj.created_at) %> ago
+                <% if src_obj.created_at != src_obj.updated_at %>
+                (Last Updated: <%= time_ago_in_words(src_obj.updated_at) %> ago)
+                <% end %>
+              </span>
+              <% if src_obj.respond_to?(:tags) %>
+                <div class="tags pull-right">
+                  Tags: <span style="font-style: italic;">
+                  <% if src_obj.tags.any? %>
+                    <%= src_obj.tags.map { |tag| link_to(tag, tag_path(tag)).html_safe }.join(', ').html_safe %>
+                  <% else %>
+                    No Tags
+                  <% end %>
+                  </span>
+                </div>
+              <% end %>
+            </small>
+          </div>
+          <div class="panel-body">
+            <%=  truncate(sanitize(src_obj.body, tags: []), length: 100) %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <div class="row">
+      <div align="center"><%= will_paginate %></div>
+    </div>
+  </div>
+</div>

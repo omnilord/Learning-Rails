@@ -1,12 +1,14 @@
 Rails.application.routes.draw do
-  root 'pages#index', layout: 'application'
 
+  # static pages
+  root 'pages#index', layout: 'application'
   get 'about' => 'pages#about'
   get 'careers' => 'pages#careers'
   get 'recover_login' => 'pages#recover'
   get 'banned' => 'pages#banned'
   #get '/:page' => 'pages#%{page}'
 
+  # users and sessions
   get 'signup' => 'users#new'
   get 'login' => 'sessions#new'
   post 'login' => 'sessions#create'
@@ -14,11 +16,13 @@ Rails.application.routes.draw do
   post 'change_password' => 'users#update_password'
   delete 'logout' => 'sessions#destroy'
 
+  # active resources
   resources :comments
   resources :users
   resources :articles
   get 'tags' => 'articles#tags'
   get 'tags/:tag' => 'articles#tag', as: 'tag'
+  get 'search' => 'search#search'
 
   # Catch all to prevent 404 errors from rendering a sad face page
   get '*path', to: 'pages#index'
