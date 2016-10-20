@@ -15,6 +15,8 @@ gem 'coffee-rails', '~> 4.1.0' # only as a dependency for turbolinks SMH
 gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 
+gem 'stock_quote'
+
 gem 'will_paginate', '~> 3.1.0'
 gem 'bootstrap-will_paginate', '~> 0.0.10'
 

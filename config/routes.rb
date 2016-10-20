@@ -1,13 +1,14 @@
 Rails.application.routes.draw do
   devise_for :users
-  root 'pages#index'
 
   # Static pages
+  root 'pages#index'
   get 'careers' => 'pages#careers'
   get 'about' => 'pages#about'
 
 
   # Resources
+  get 'portfolio' => 'users#portfolio'
 
 
   # Catch all to prevent 404 errors from rendering a sad face page
