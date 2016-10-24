@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, path_names: {
+    verify_authy: '/vtoken',
+    enable_authy: '/enable_2fa',
+    verify_authy_installation: '/vauth'
+  }
 
   # Static pages
   root 'pages#index'
