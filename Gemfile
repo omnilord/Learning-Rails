@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 ruby '2.3.0'
 
 gem 'rails', '4.2.6'
-gem 'envyable'
+gem 'envyable', '>=1.1.1'
 
 gem 'devise'
 gem 'twitter-bootstrap-rails'
