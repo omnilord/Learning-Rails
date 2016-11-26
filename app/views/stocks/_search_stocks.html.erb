@@ -1,0 +1,16 @@
+<div id="stock-lookup" class="container">
+  <h3>Search Stocks</h3>
+  <%= form_tag search_path, remote: true, method: :get, id: 'search-stock-form' do %>
+    <div class="form-group row no-padding text-center col-md-12">
+      <div class="col-md-10" style="padding-right: 0">
+        <%= text_field_tag :stock, params[:stock], placeholder: 'Stock Ticker Symbol',
+            class: 'form-control search-box input-lg pull-right' %>
+      </div>
+      <div class="col-md-2" style="padding-left: 0">
+        <%= button_tag type: :submit, class: 'btn btn-lg btn-success pull-left' do %>
+          <i class="fa fa-search"></i>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

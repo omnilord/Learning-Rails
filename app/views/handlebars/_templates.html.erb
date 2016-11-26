@@ -1,0 +1,49 @@
+<script type="text/x-handlebars-template" id="handlebars-spinner">
+<div class="container">
+  <div class="row">
+    <div id="spinner" class="col-md-4 col-md-offset-4 spinner">
+      <i class="fa fa-spinner fa-spin"></i>
+    </div>
+  </div>
+</div>
+</script>
+
+<script type="text/x-handlebar-template" id="handlebars-stock">
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2 stock">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            <span class="stock-ticker">{{ticker}}</span>
+          </h3>
+        </div>
+        <div class="panel-body">
+          <span class="stock-name">{{name}}</span>
+        </div>
+        <div class="panel-footer">
+          <span class="stock-price">{{last_price}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</script>
+
+<script type="text/x-handlebar-template" id="handlebars-error">
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2 error">
+      <div class="panel panel-danger">
+        <div class="panel-heading">
+          <h3 class="panel-title">Error</h3>
+        </div>
+        <div class="panel-body">
+          {{msg}}
+        </div>
+        <div class="panel-footer"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</script>

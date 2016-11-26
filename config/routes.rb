@@ -13,7 +13,9 @@ Rails.application.routes.draw do
 
   # Resources
   get 'portfolio' => 'users#portfolio'
-
+  get 'search' => 'stocks#search'
+  #get 'stock/:ticker' => 'stocks#stock'
+  get 'stocks' => 'stocks#index'
 
   # Catch all to prevent 404 errors from rendering a sad face page
   get '*path', to: 'pages#index'

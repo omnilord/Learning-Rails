@@ -13,6 +13,25 @@ $navbar-default-link-active-color: $navbar-default-color-global;
   top: -10px;
 }
 
+.stock {
+  > span {
+    margin-left: 10px;
+
+    &:before {
+      font-weight: bold;
+    }
+  }
+  .stock-ticker:not(:empty):before {
+    content: "Ticker: ";
+  }
+  .stock-name:not(:empty):before {
+    content: "Name: ";
+  }
+  .stock-price:not(:empty):before {
+    content: "Price: ";
+  }
+}
+
 footer {
   margin-top: 25px;
   padding-top: 5px;

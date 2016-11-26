@@ -7,3 +7,10 @@ features that may or may not actually be useful in a real application (you proba
 want to follow your friends stocks, since that has some questionable legality).
 
 Please enjoy my code while I learn more about Ruby on Rails.  Thanks for reviewing!
+
+
+## Deviations
+This implementation deviates from the Udemy lessons by including and implementing a two-factor
+authentication gem for [Twilio Authy](https://www.authy.com/).
+
+It also utilizes Handlebars.js in place of server-side partials for certain client-side rendering.

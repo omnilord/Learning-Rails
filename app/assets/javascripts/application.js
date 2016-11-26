@@ -15,4 +15,5 @@
 //= require twitter/bootstrap
 //= require turbolinks
 //= require bootstrap-sprockets
+//= require handlebars
 //= require_tree .

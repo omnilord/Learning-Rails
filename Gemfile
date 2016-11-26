@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 ruby '2.3.0'
 
 gem 'rails', '4.2.6'
-gem 'envyable', '>=1.1.1'
+gem 'envyable', '>= 1.2.0'
 
 gem 'devise'
 gem 'twitter-bootstrap-rails'
@@ -16,6 +16,7 @@ gem 'jquery-rails'
 gem 'coffee-rails', '~> 4.1.0' # only as a dependency for turbolinks SMH
 gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
+gem 'handlebars_assets'
 
 gem 'stock_quote'
 
@@ -23,6 +24,7 @@ gem 'will_paginate', '~> 3.1.0'
 gem 'bootstrap-will_paginate', '~> 0.0.10'
 
 gem 'bcrypt', '~> 3.1.7'
+
 
 group :development, :test do
   gem 'sqlite3'
