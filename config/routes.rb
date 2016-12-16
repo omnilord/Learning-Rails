@@ -12,11 +12,13 @@ Rails.application.routes.draw do
 
 
   # Resources
+  resources :user_stocks, except: [:edit, :show]
+
   get 'portfolio' => 'users#portfolio'
   get 'search' => 'stocks#search'
   #get 'stock/:ticker' => 'stocks#stock'
   get 'stocks' => 'stocks#index'
 
-  # Catch all to prevent 404 errors from rendering a sad face page
-  get '*path', to: 'pages#index'
+  # Catch all to prevent generic 404 errors from rendering
+  get '*path', to: 'pages#badroute'
 end
