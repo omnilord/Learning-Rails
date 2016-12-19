@@ -94,9 +94,9 @@ $(function () {
   var maindiv = $('#main_content'),
       user = <%= current_user.to_json(only: [:id, :email, :created_at]).html_safe %>,
       tmpls = {},
-      search_btn = $('#search-stock-form').on({
+      nav_search = $('#search-stock-form').on({
         'ajax:success': function (ev, data, status) {
-          maindiv.html(tmpls.stock(data));
+          maindiv.html(tmpls.stock(data.data));
         },
         'ajax:before': function () {
           maindiv.html(tmpls.spinner());
@@ -108,7 +108,7 @@ $(function () {
           maindiv.html(tmpls.error({msg: 'No stock found.'}));
         }
       }),
-      search_val = search_btn.closest('div').find('input[type="text"]').val();
+      search_val = nav_search.closest('div').find('input[type="text"]').val();
 
   <% if user_signed_in? %>
 
@@ -212,7 +212,7 @@ $(function () {
 
   // Immediate executions
   if (search_val != '') {
-    search_btn.closest('form').submit();
+    nav_search.submit();
   }
 });
 </script>
