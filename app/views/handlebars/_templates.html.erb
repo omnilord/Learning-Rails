@@ -8,21 +8,57 @@
 </div>
 </script>
 
-<script type="text/x-handlebar-template" id="handlebars-stock">
+<script type="text/x-handlebars-template" id="handlebars-stock">
 <div class="container">
   <div class="row">
     <div class="col-md-8 col-md-offset-2 stock">
-      <div class="panel panel-default">
+      <div class="panel panel-default" data-stock-id="{{stock.id}}" data-user-stocks-id="{{track.id}}">
         <div class="panel-heading">
           <h3 class="panel-title">
-            <span class="stock-ticker">{{ticker}}</span>
+            <span class="stock-ticker">{{stock.ticker}}</span>
+            <span class="stock-price pull-right">{{stock.last_price}}</span>
           </h3>
         </div>
         <div class="panel-body">
-          <span class="stock-name">{{name}}</span>
+          <span class="stock-name">{{stock.name}}</span>
         </div>
         <div class="panel-footer">
-          <span class="stock-price">{{last_price}}</span>
+          <% if user_signed_in? %>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="input-group form-group" style="margin-bottom: 0; text-align: left;">
+                  <%= number_field_tag nil, nil,
+                                       placeholder: '#',
+                                       class: 'form-control stock-count-edit',
+                                       style: 'width: 4em',
+                                       min: '0' %>
+                  <span class="input-group-btn pull-left">
+                    <%= button_tag name: nil, type: :button, class: 'btn btn-primary add-stock-to-portfolio' do %>
+                      <i class="glyphicon glyphicon-plus"></i>
+                    <% end %>
+                    {{#if track}}
+                      {{#if track.owned}}
+                        <%= button_tag name: nil, type: :button, class: 'btn btn-warning subtract-stock-from-portfolio' do %>
+                          <i class="glyphicon glyphicon-minus"></i>
+                        <% end %>
+                      {{/if}}
+                      <%= button_tag name: nil, type: :button, class: 'btn btn-danger remove-stock-from-portfolio' do %>
+                        <i class="glyphicon glyphicon-remove"></i>
+                      <% end %>
+                    {{/if}}
+                  </span>
+                </div>
+              </div>
+              {{#if track.owned}}
+                <div class="col-md-9">
+                  <span class="pull-right">
+                    You own: <strong>{{track.owned}}</strong> shares
+                    valued at: <strong>{{math track.owned "*" stock.last_price precision=2 thousands=","}}</strong>
+                  </span>
+                </div>
+              {{/if}}
+            </div>
+          <% end %>
         </div>
       </div>
     </div>
@@ -30,7 +66,7 @@
 </div>
 </script>
 
-<script type="text/x-handlebar-template" id="handlebars-error">
+<script type="text/x-handlebars-template" id="handlebars-error">
 <div class="container">
   <div class="row">
     <div class="col-md-8 col-md-offset-2 error">
@@ -46,4 +82,137 @@
     </div>
   </div>
 </div>
+</script>
+
+
+<script>
+/*
+  All of the code for running the above templates is stored here:
+*/
+
+$(function () {
+  var maindiv = $('#main_content'),
+      user = <%= current_user.to_json(only: [:id, :email, :created_at]).html_safe %>,
+      tmpls = {},
+      search_btn = $('#search-stock-form').on({
+        'ajax:success': function (ev, data, status) {
+          maindiv.html(tmpls.stock(data));
+        },
+        'ajax:before': function () {
+          maindiv.html(tmpls.spinner());
+        },
+        'ajax:after': function () {
+          maindiv.html(tmpls.spinner());
+        },
+        'ajax:error': function (ev, xhr, status, err) {
+          maindiv.html(tmpls.error({msg: 'No stock found.'}));
+        }
+      }),
+      search_val = search_btn.closest('div').find('input[type="text"]').val();
+
+  <% if user_signed_in? %>
+
+  // Add Stock to Portfolio
+  $(document).on('click', 'button.add-stock-to-portfolio, button.subtract-stock-from-portfolio', function () {
+    var $this = $(this),
+        stock_id = parseInt($this.closest('[data-stock-id]').attr('data-stock-id')) || null,
+        user_stock_id = parseInt($this.closest('[data-stock-id]').attr('data-user-stocks-id')) || null,
+        count = parseInt($this.parent().siblings('input.stock-count-edit').val());
+
+    if (/\D/.test(count) || count < 1) {
+      return;
+    }
+
+    if ($this.is('.subtract-stock-from-portfolio')) {
+      count *= -1;
+    }
+
+    $.ajax({
+      url: '<%= user_stocks_path %>' + (user_stock_id ? '/' + user_stock_id : ''),
+      data: {
+        user: user.id,
+        stock_id: stock_id,
+        user_stock_id: user_stock_id,
+        count: isNaN(count) ? 0 : count
+      },
+      method: user_stock_id ? 'PATCH' : 'POST',
+      dataType: 'json',
+      beforeSend: () => {
+        $this.parent().find('button').each(function () {
+          $(this).html('<i class="fa fa-spinner fa-spin"></i>').prop('disabled', true);
+        });
+      }
+    })
+      .done(function (data) {
+        maindiv.html(tmpls.stock(data.data));
+      })
+      .fail(function (data) {
+        maindiv.html(tmpls.error({msg: 'Failed to add stock.'}));
+      });
+  });
+
+
+  // Remove Stock from Portfolio
+  $(document).on('click', 'button.remove-stock-from-portfolio', function () {
+    var $this = $(this),
+        user_stock_id = parseInt($this.closest('[data-stock-id]').attr('data-user-stocks-id')) || null;
+
+    $.ajax({
+      url: '<%= user_stocks_path %>/' + user_stock_id,
+      method: 'DELETE',
+      dataType: 'json',
+      beforeSend: () => {
+        $this.parent().find('button').each(function () {
+          $(this).html('<i class="fa fa-spinner fa-spin"></i>').prop('disabled', true);
+        });
+      }
+    })
+      .done(function (data) {
+        maindiv.html(tmpls.stock(data.data));
+      })
+      .fail(function (data) {
+        maindiv.html(tmpls.error({msg: 'Failed to remove stock.'}));
+      });
+  });
+
+
+  // Handle numeric inputs into the count input
+  $(document).on('keyup keydown', 'input.stock-count-edit', function (ev) {
+    if ((ev.keyCode < 48 || ev.keyCode > 57) && [8, 9, 13, 46].indexOf(ev.keyCode) == -1) {
+      ev.preventDefault();
+    }
+  });
+
+  <% end %>
+
+  // Pre-load helpers
+  Handlebars.registerHelper('math', function (lvalue, operator, rvalue, options) {
+    lvalue = parseFloat(lvalue);
+    rvalue = parseFloat(rvalue);
+
+    var v = {
+        '+': lvalue + rvalue,
+        '-': lvalue - rvalue,
+        '*': lvalue * rvalue,
+        '/': lvalue / rvalue,
+        '%': lvalue % rvalue
+    }[operator].toFixed(options.hash.precision || -1);
+    if (options.hash.thousands) {
+      v = v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, options.hash.thousands);
+    }
+    return v;
+  });
+
+  // Load all templates
+  $('script[type="text/x-handlebars-template"]').each(function () {
+    var id = this.id.replace(/^handlebars\-/, '');
+    tmpls[id] = Handlebars.compile(document.getElementById(this.id).innerHTML);
+    console.log(tmpls.hasOwnProperty(id), id + ' template loaded.', this);
+  });
+
+  // Immediate executions
+  if (search_val != '') {
+    search_btn.closest('form').submit();
+  }
+});
 </script>

@@ -13,4 +13,8 @@ Please enjoy my code while I learn more about Ruby on Rails.  Thanks for reviewi
 This implementation deviates from the Udemy lessons by including and implementing a two-factor
 authentication gem for [Twilio Authy](https://www.authy.com/).
 
-It also utilizes Handlebars.js in place of server-side partials for certain client-side rendering.
+In addition to using Authy, I have also switched to using Redis for sessions just to see how that
+works.
+
+This project also utilizes Handlebars.js in place of server-side partials for templated client-side
+UI rendering of resources that are loaded via AJAX.

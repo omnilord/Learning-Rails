@@ -3,7 +3,9 @@ class StocksController < ApplicationController
     if params[:stock]
       @stock = Stock.fetch_stock(params[:stock])
       if @stock
-        render json: @stock
+        @owned = user_signed_in? ?
+                   @stock.user_stocks.where('user_id = ?', current_user.id).first : nil
+        render json: { stock: @stock, track: @owned }
       else
         render status: :not_found, nothing: true
       end

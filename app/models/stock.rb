@@ -3,7 +3,7 @@ class Stock < ActiveRecord::Base
     def fetch_stock(ticker)
       ticker.upcase!
       return find_by_ticker(ticker) if exists?(ticker: ticker)
-      
+
       stock_data = StockQuote::Stock.quote(ticker)
       return nil unless stock_data.name
       new_stock(stock_data)
@@ -22,6 +22,9 @@ class Stock < ActiveRecord::Base
 end
 
 class Stock < ActiveRecord::Base
+  has_many :user_stocks
+  has_many :users, through: :user_stocks
+
   def update_via_fetch(stock)
     slp = Stock.price(stock)
     self.last_price = slp unless self.last_price == slp
