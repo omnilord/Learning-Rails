@@ -38,4 +38,6 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  config.session_store :redis_store, servers: "redis://localhost:6379/0/session", expires_in: 90.minutes
 end
