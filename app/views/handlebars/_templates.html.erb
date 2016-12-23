@@ -1,8 +1,13 @@
-<script type="text/x-handlebars-template" id="handlebars-spinner">
+<script type="text/x-handlebars-partial" id="handlebars-spinner">
+  <i class="fa fa-spinner fa-spin"></i>
+</script>
+
+
+<script type="text/x-handlebars-template" id="handlebars-spinner_row">
 <div class="container">
   <div class="row">
-    <div id="spinner" class="col-md-4 col-md-offset-4 spinner">
-      <i class="fa fa-spinner fa-spin"></i>
+    <div class="col-md-4 col-md-offset-4 spinner">
+      {{> spinner}}
     </div>
   </div>
 </div>
@@ -137,12 +142,13 @@ $(function () {
           maindiv.html(templates.error({msg: 'No stock found.'}));
         }
       }),
-      search_val = nav_search.closest('div').find('input[type="text"]').val();
+      search_val = nav_search.closest('div').find('input[type="text"]').val(),
+      spinner;
   <% if user_signed_in? %>
 
   const toggle_spinners = ($btn) => {
     $btn.parent().find('button').each(function () {
-      $(this).html('<i class="fa fa-spinner fa-spin"></i>').prop('disabled', true);
+      $(this).html(spinner).prop('disabled', true);
     });
   }
 
@@ -263,5 +269,7 @@ $(function () {
   window.railsstockapp = {
     templates: templates
   };
+
+  spinner = templates.spinner();
 });
 </script>
