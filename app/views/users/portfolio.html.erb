@@ -1,8 +1,7 @@
-<h1>My Portfolio</h1>
-<div id="portfolio"></div>
 <script>
 $(function () {
-  var $this = $('#portfolio');
+  var $this = $('#main_content');
+
   $.ajax({
     url: '/portfolio',
     method: 'GET',
@@ -10,8 +9,9 @@ $(function () {
     beforeSend: () => {
       $this.html('<i class="fa fa-spinner fa-spin"></i>');
     }
-  }).done(function (data) {
-    $this.html(window.railsstockapp.templates.portfolio(data));
-  });
+  })
+    .done(function (data) {
+      $this.html(window.railsstockapp.templates.portfolio(data));
+    });
 });
 </script>

@@ -19,7 +19,7 @@
   <div class="panel-heading">
     <h3 class="panel-title">
       <span class="stock-ticker">{{stock.ticker}}</span>
-      <span class="stock-price pull-right">{{stock.last_price}}</span>
+      <span class="stock-price pull-right">{{math stock.last_price "+" 0 precision=2 thousands="," prefix="$"}}</span>
     </h3>
   </div>
   <div class="panel-body">
@@ -56,7 +56,7 @@
           <span class="pull-right text-right">
           {{#if track.owned}}
             <div><small>Shares owned:</small> <strong>{{track.owned}}</strong></div>
-            <div><small>Value:</small> <strong>{{math track.owned "*" stock.last_price precision=2 thousands=","}}</strong></div>
+            <div><small>Value:</small> <strong>{{math track.owned "*" stock.last_price precision=2 thousands="," prefix="$"}}</strong></div>
           {{else if track}}
           <%= button_tag name: nil, type: :button, class: 'btn btn-primary remove-stock-from-watchlist' do %>
             Remove
@@ -88,8 +88,9 @@
 
 <script type="text/x-handlebars-template" id="handlebars-portfolio">
   <div class="container">
+    <h2 align="center">My Portfolio <small>{{data.stocks.length}} stock(s), {{data.portfolio.shares}} share(s), value: <em>{{math data.portfolio.value "+" 0 precision=2 thousands="," prefix="$"}}</em></small><hr/></h2>
     <div class="row" data-rm-action="remove">
-      {{#each data}}
+      {{#each data.stocks}}
         <div class="col-md-4">
           {{> stock}}
         </div>
@@ -239,6 +240,12 @@ $(function () {
     }[operator].toFixed(options.hash.precision || -1);
     if (options.hash.thousands) {
       v = v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, options.hash.thousands);
+    }
+    if (options.hash.prefix) {
+      v = options.hash.prefix + v;
+    }
+    if (options.hash.suffix) {
+      v+= options.hash.suffix;
     }
     return v;
   });
