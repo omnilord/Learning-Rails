@@ -54,7 +54,7 @@ class UserStocksController < ApplicationController
       if @user_stock.save
         format.html { redirect_to @user_stock, notice: 'User stock was successfully updated.' }
         format.json { render json: { status: :ok, data: {
-          stock: @user_stock.stock,
+          stock: @stock,
           track: @user_stock
         } } }
       else
@@ -67,7 +67,6 @@ class UserStocksController < ApplicationController
   # DELETE /user_stocks/1
   # DELETE /user_stocks/1.json
   def destroy
-    @stock = @user_stock.stock
     @user_stock.destroy
     respond_to do |format|
       format.html { redirect_to user_stocks_url, notice: 'User stock was successfully destroyed.' }
@@ -81,6 +80,8 @@ class UserStocksController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_user_stock
       @user_stock = UserStock.find(params[:id])
+      @stock = @user_stock.stock
+      @user = @user_stock.user
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

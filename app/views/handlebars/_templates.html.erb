@@ -8,63 +8,83 @@
 </div>
 </script>
 
-<script type="text/x-handlebars-template" id="handlebars-stock">
+
+<script type="text/x-handlebars-partial" id="handlebars-stock">
+<div class="panel panel-default stock" data-stock-id="{{stock.id}}" data-user-stocks-id="{{track.id}}">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      <span class="stock-ticker">{{stock.ticker}}</span>
+      <span class="stock-price pull-right">{{stock.last_price}}</span>
+    </h3>
+  </div>
+  <div class="panel-body">
+    <span class="stock-name">{{stock.name}}</span>
+  </div>
+  <div class="panel-footer">
+    <% if user_signed_in? %>
+      <div class="row">
+        <div class="col-md-2">
+          <div class="input-group input-group-sm form-group form-group-sm" style="margin-bottom: 0; text-align: left;">
+            <%= number_field_tag nil, nil,
+                                 placeholder: '#',
+                                 class: 'form-control stock-count-edit',
+                                 style: 'width: 4em',
+                                 min: '0' %>
+            <span class="input-group-btn pull-left">
+              <%= button_tag name: nil, type: :button, class: 'btn btn-primary add-stock-to-portfolio' do %>
+                <i class="glyphicon glyphicon-plus"></i>
+              <% end %>
+              {{#if track}}
+                {{#if track.owned}}
+                  <%= button_tag name: nil, type: :button, class: 'btn btn-warning subtract-stock-from-portfolio' do %>
+                    <i class="glyphicon glyphicon-minus"></i>
+                  <% end %>
+                {{/if}}
+                <%= button_tag name: nil, type: :button, class: 'btn btn-danger remove-stock-from-portfolio' do %>
+                  <i class="glyphicon glyphicon-remove"></i>
+                <% end %>
+              {{/if}}
+            </span>
+          </div>
+        </div>
+        {{#if track.owned}}
+        <div class="col-md-10">
+          <span class="pull-right text-right">
+            <div><small>Shares owned:</small> <strong>{{track.owned}}</strong></div>
+            <div><small>Value:</small> <strong>{{math track.owned "*" stock.last_price precision=2 thousands=","}}</strong></div>
+          </span>
+        </div>
+        {{/if}}
+      </div>
+    <% end %>
+  </div>
+</div>
+</script>
+
+
+<script type="text/x-handlebars-template" id="handlebars-stock_search_result">
 <div class="container">
   <div class="row">
-    <div class="col-md-8 col-md-offset-2 stock">
-      <div class="panel panel-default" data-stock-id="{{stock.id}}" data-user-stocks-id="{{track.id}}">
-        <div class="panel-heading">
-          <h3 class="panel-title">
-            <span class="stock-ticker">{{stock.ticker}}</span>
-            <span class="stock-price pull-right">{{stock.last_price}}</span>
-          </h3>
-        </div>
-        <div class="panel-body">
-          <span class="stock-name">{{stock.name}}</span>
-        </div>
-        <div class="panel-footer">
-          <% if user_signed_in? %>
-            <div class="row">
-              <div class="col-md-3">
-                <div class="input-group form-group" style="margin-bottom: 0; text-align: left;">
-                  <%= number_field_tag nil, nil,
-                                       placeholder: '#',
-                                       class: 'form-control stock-count-edit',
-                                       style: 'width: 4em',
-                                       min: '0' %>
-                  <span class="input-group-btn pull-left">
-                    <%= button_tag name: nil, type: :button, class: 'btn btn-primary add-stock-to-portfolio' do %>
-                      <i class="glyphicon glyphicon-plus"></i>
-                    <% end %>
-                    {{#if track}}
-                      {{#if track.owned}}
-                        <%= button_tag name: nil, type: :button, class: 'btn btn-warning subtract-stock-from-portfolio' do %>
-                          <i class="glyphicon glyphicon-minus"></i>
-                        <% end %>
-                      {{/if}}
-                      <%= button_tag name: nil, type: :button, class: 'btn btn-danger remove-stock-from-portfolio' do %>
-                        <i class="glyphicon glyphicon-remove"></i>
-                      <% end %>
-                    {{/if}}
-                  </span>
-                </div>
-              </div>
-              {{#if track.owned}}
-                <div class="col-md-9">
-                  <span class="pull-right">
-                    You own: <strong>{{track.owned}}</strong> shares
-                    valued at: <strong>{{math track.owned "*" stock.last_price precision=2 thousands=","}}</strong>
-                  </span>
-                </div>
-              {{/if}}
-            </div>
-          <% end %>
-        </div>
-      </div>
+    <div class="col-md-8 col-md-offset-2">
+      {{> stock}}
     </div>
   </div>
 </div>
 </script>
+
+
+<script type="text/x-handlebars-template" id="handlebars-portfolio">
+  <div class="container">
+    <div class="row">
+      {{#each data}}
+        <div class="col-md-4">
+          {{> stock}}
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</script>
+
 
 <script type="text/x-handlebars-template" id="handlebars-error">
 <div class="container">
@@ -86,6 +106,7 @@
 
 
 <script>
+
 /*
   All of the code for running the above templates is stored here:
 */
@@ -93,19 +114,19 @@
 $(function () {
   var maindiv = $('#main_content'),
       user = <%= current_user.to_json(only: [:id, :email, :created_at]).html_safe %>,
-      tmpls = {},
+      templates = {}, partials = {},
       nav_search = $('#search-stock-form').on({
         'ajax:success': function (ev, data, status) {
-          maindiv.html(tmpls.stock(data.data));
+          maindiv.html(templates.stock_search_result(data.data));
         },
         'ajax:before': function () {
-          maindiv.html(tmpls.spinner());
+          maindiv.html(templates.spinner());
         },
         'ajax:after': function () {
-          maindiv.html(tmpls.spinner());
+          maindiv.html(templates.spinner());
         },
         'ajax:error': function (ev, xhr, status, err) {
-          maindiv.html(tmpls.error({msg: 'No stock found.'}));
+          maindiv.html(templates.error({msg: 'No stock found.'}));
         }
       }),
       search_val = nav_search.closest('div').find('input[type="text"]').val();
@@ -144,10 +165,10 @@ $(function () {
       }
     })
       .done(function (data) {
-        maindiv.html(tmpls.stock(data.data));
+        maindiv.html(templates.stock_search_result(data.data));
       })
       .fail(function (data) {
-        maindiv.html(tmpls.error({msg: 'Failed to add stock.'}));
+        maindiv.html(templates.error({msg: 'Failed to add stock.'}));
       });
   });
 
@@ -168,10 +189,10 @@ $(function () {
       }
     })
       .done(function (data) {
-        maindiv.html(tmpls.stock(data.data));
+        maindiv.html(templates.stock_search_result(data.data));
       })
       .fail(function (data) {
-        maindiv.html(tmpls.error({msg: 'Failed to remove stock.'}));
+        maindiv.html(templates.error({msg: 'Failed to remove stock.'}));
       });
   });
 
@@ -184,6 +205,7 @@ $(function () {
   });
 
   <% end %>
+
 
   // Pre-load helpers
   Handlebars.registerHelper('math', function (lvalue, operator, rvalue, options) {
@@ -203,16 +225,32 @@ $(function () {
     return v;
   });
 
+
   // Load all templates
-  $('script[type="text/x-handlebars-template"]').each(function () {
-    var id = this.id.replace(/^handlebars\-/, '');
-    tmpls[id] = Handlebars.compile(document.getElementById(this.id).innerHTML);
-    console.log(tmpls.hasOwnProperty(id), id + ' template loaded.', this);
-  });
+  $('script[type|="text/x-handlebars"]').each((() => {
+    var hclr = /^(text\/x\-)?handlebars\-/;
+
+    return function () {
+      var id = this.id.replace(hclr, ''),
+          type = this.getAttribute('type').replace(hclr, ''),
+          target;
+      if (type == 'template') {
+        (target = templates)[id] = Handlebars.compile(this.innerHTML);
+      } else if (type == 'partial') {
+        (target = partials)[id] = Handlebars.registerPartial(id, this.innerHTML);
+      }
+      console.log(target.hasOwnProperty(id), id + ' ' + type + ' loaded.', this);
+    };
+  })());
+
 
   // Immediate executions
   if (search_val != '') {
     nav_search.submit();
   }
+
+  window.railsstockapp = {
+    templates: templates
+  };
 });
 </script>

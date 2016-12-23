@@ -1,1 +1,17 @@
 <h1>My Portfolio</h1>
+<div id="portfolio"></div>
+<script>
+$(function () {
+  var $this = $('#portfolio');
+  $.ajax({
+    url: '/portfolio',
+    method: 'GET',
+    dataType: 'json',
+    beforeSend: () => {
+      $this.html('<i class="fa fa-spinner fa-spin"></i>');
+    }
+  }).done(function (data) {
+    $this.html(window.railsstockapp.templates.portfolio(data));
+  });
+});
+</script>
