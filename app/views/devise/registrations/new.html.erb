@@ -37,6 +37,10 @@
         <%= f.label :password_confirmation %>
         <%= f.password_field :password_confirmation, class: "form-control" %>
       </div>
+      <div class="form-group">
+        <%= f.check_box :mfa %>
+        <%= f.label "Enable Two-Factor Authentications", for: 'user_mfa' %>
+      </div>
       <%= f.submit t('.sign_up', :default => "Sign up"), class: "btn btn-primary" %>
     <% end %>
   </div>
