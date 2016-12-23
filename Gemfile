@@ -4,8 +4,6 @@ ruby '2.3.0'
 gem 'rails', '4.2.6'
 gem 'envyable', '>= 1.2.0'
 
-gem 'redis-rails', '~> 4'
-
 gem 'devise'
 gem 'twitter-bootstrap-rails'
 gem 'devise-bootstrap-views'
@@ -29,6 +27,7 @@ gem 'bcrypt', '~> 3.1.7'
 
 
 group :development, :test do
+  gem 'redis-rails', '~> 4'
   gem 'sqlite3'
   gem 'byebug'
   gem 'spring'
