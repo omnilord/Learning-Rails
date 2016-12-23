@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161126155145) do
+ActiveRecord::Schema.define(version: 20161223063027) do
 
   create_table "stocks", force: :cascade do |t|
     t.text     "ticker"
@@ -45,6 +45,10 @@ ActiveRecord::Schema.define(version: 20161126155145) do
     t.string   "authy_id"
     t.datetime "last_sign_in_with_authy"
     t.boolean  "authy_enabled",           default: false
+    t.text     "first_name"
+    t.text     "last_name"
+    t.text     "occupation"
+    t.text     "location"
   end
 
   add_index "users", ["authy_id"], name: "index_users_on_authy_id"

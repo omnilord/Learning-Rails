@@ -2,9 +2,10 @@ Welcome to the Stock tracking app as defined by '''The Complete Ruby on Rails de
 available at [Udemy](https://www.udemy.com/the-complete-ruby-on-rails-developer-course).
 
 This app supports using a gem to discover stock prices electronically in as near to real-time
-as is allowed by law, uses the Devise gem for user management, and performs several other
-features that may or may not actually be useful in a real application (you probably wouldn't
-want to follow your friends stocks, since that has some questionable legality).
+as is allowed by law, uses the Devise gem for user management (a part of the project is to
+customize Devise assets), and performs several other features that may or may not actually
+be useful in a real application (you probably wouldn't want to follow your friends stocks,
+since that has some questionable legality and cybersecurity considerations).
 
 Please enjoy my code while I learn more about Ruby on Rails.  Thanks for reviewing!
 

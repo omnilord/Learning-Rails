@@ -4,4 +4,9 @@ class User < ActiveRecord::Base
 
   has_many :user_stocks
   has_many :stocks, through: :user_stocks
+
+  def fullname
+    name = "#{first_name} #{last_name}".strip
+    name.empty? ? "My Profile" : name
+  end
 end

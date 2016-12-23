@@ -13,6 +13,14 @@ $navbar-default-link-active-color: $navbar-default-color-global;
   top: -10px;
 }
 
+.no-padding {
+  padding: 0 !important;
+}
+
+.left-padding {
+  padding-left: 15px !important;
+}
+
 .stock {
   > span {
     margin-left: 10px;
