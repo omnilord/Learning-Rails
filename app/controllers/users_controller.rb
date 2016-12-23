@@ -30,4 +30,8 @@ class UsersController < AuthAppController
       end
     end
   end
+
+  def friends
+    #code
+  end
 end

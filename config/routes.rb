@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     verify_authy_installation: '/vauth'
   }
 
+
   # Static pages
   root 'pages#index'
   get 'careers' => 'pages#careers'
@@ -18,9 +19,11 @@ Rails.application.routes.draw do
   resources :user_stocks, except: [:edit, :show]
 
   get 'portfolio' => 'users#portfolio'
+  get 'friends' => 'users#friends'
   get 'search' => 'stocks#search'
   #get 'stock/:ticker' => 'stocks#stock'
   get 'stocks' => 'stocks#index'
+
 
   # Catch all to prevent generic 404 errors from rendering
   get '*path', to: 'pages#badroute'
