@@ -9,21 +9,13 @@ class UsersController < AuthAppController
       else
         format.html { render :portfolio }
         format.json {
-          value = 0
-          shares = 0
-          @stocks = UserStock.where('user_id = ?', @user.id).map do |tracking|
-            value += tracking.owned * tracking.stock.last_price
-            shares += tracking.owned
-            { stock: tracking.stock, track: tracking }
-          end
           render json: {
             status: :ok,
             data: {
-              portfolio: {
-                shares: shares,
-                value: value
-              },
-              stocks: @stocks
+              portfolio: @user.portfolio_summary,
+              stocks: UserStock.where('user_id = ?', @user.id).map do |tracking|
+                { stock: tracking.stock, track: tracking }
+              end
             }
           }
         }
@@ -32,6 +24,31 @@ class UsersController < AuthAppController
   end
 
   def friends
-    #code
+    @user = current_user
+
+    respond_to do |format|
+      if @user.nil?
+        format.html { redirect_to root_path }
+        format.json { render json: { status: :unauthorized } }
+      else
+        format.html { render :friends }
+        format.json {
+          render json: {
+            status: :ok,
+            data: {
+              friends: Friendship.where('user_id = ?', @user.id).map do |friendship|
+                friend = friendship.friend
+                {
+                  user_id: friend.id,
+                  fullname: friend.fullname,
+                  email: friend.email,
+                  portfolio: friend.portfolio_summary
+                }
+              end
+            }
+          }
+        }
+      end
+    end
   end
 end

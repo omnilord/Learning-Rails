@@ -1,1 +1,17 @@
-<h1>friends!</h1>
+<script>
+$(function () {
+  var $this = $('#main_content');
+
+  $.ajax({
+    url: '/friends',
+    method: 'GET',
+    dataType: 'json',
+    beforeSend: () => {
+      $this.html('<i class="fa fa-spinner fa-spin"></i>');
+    }
+  })
+    .done(function (data) {
+      $this.html(window.railsstockapp.templates.friends(data));
+    });
+});
+</script>

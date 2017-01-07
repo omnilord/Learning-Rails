@@ -91,3 +91,9 @@ footer {
     background-color: #80ee80;
   }
 }
+
+.table.centering {
+  td:not(:first-child), th:not(:first-child) {
+    text-align: center !important;
+  }
+}
