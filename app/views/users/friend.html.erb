@@ -1,0 +1,18 @@
+<div class="center">
+  <span class="msg"></span>
+</div>
+<script>
+$(function () {
+  $.ajax({
+    url: '<%= friends_path %>/<%= @friend.id %>',
+    method: 'GET',
+    dataType: 'json'
+  })
+    .done((data) => {
+      $('#main_content').html(window.railsstockapp.templates.friend_portfolio(data));
+    })
+    .fail((data) => {
+      $('#main_content').html(window.railsstockapp.templates.error({msg: 'Failed to load friend user.'}));
+    });
+});
+</script>

@@ -19,10 +19,14 @@ Rails.application.routes.draw do
   resources :user_stocks, except: [:edit, :show]
 
   get 'portfolio' => 'users#portfolio'
-  get 'friends' => 'users#friends'
-  get 'search' => 'stocks#search'
-  #get 'stock/:ticker' => 'stocks#stock'
+  get 'search/stocks' => 'stocks#search'
   get 'stocks' => 'stocks#index'
+
+  get 'friends' => 'users#friends'
+  get 'friends/:id' => 'users#friend'
+  get 'search/friends' => 'users#search'
+  post 'friends' => 'users#add_friend'
+  delete 'friends' => 'users#remove_friend'
 
 
   # Catch all to prevent generic 404 errors from rendering

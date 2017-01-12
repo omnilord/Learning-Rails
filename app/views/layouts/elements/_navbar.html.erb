@@ -46,11 +46,11 @@
         </li>
         <% end %>
         <li>
-          <%= form_tag search_path, remote: true, method: :get,
+          <%= form_tag search_stocks_path, remote: true, method: :get,
                                     id: 'search-stock-form',
                                     class: 'navbar-form navbar-right' do %>
             <div class="input-group form-group">
-              <%= text_field_tag :stock, nil, placeholder: 'Search', class: 'form-control', value: (params['s'].nil? ? nil : params['s']) %>
+              <%= text_field_tag :stock, nil, placeholder: 'Search Ticker', class: 'form-control', value: (params['s'].nil? ? nil : params['s']) %>
               <span class="input-group-btn">
                 <%= button_tag name: nil, type: :submit, class: 'btn btn-default' do %>
                   <i class="glyphicon glyphicon-search"></i>

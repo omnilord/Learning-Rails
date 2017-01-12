@@ -75,6 +75,40 @@
 </script>
 
 
+<script type="text/x-handlebars-partial" id="handlebars-friend">
+<div class="panel panel-info friend" data-user-id="{{user_id}}">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      <span class="username">{{fullname}}</span><br/>
+      <small>{{email}}</small>
+    </h3>
+  </div>
+  <div class="panel-body">
+    <table><tbody>
+      <tr><td>Stocks Watched:</td><td><span class="badge pull-right">{{portfolio.watches}}</span></td></tr>
+      <tr><td>Stocks Owned:</td><td><span class="badge pull-right">{{portfolio.stocks}}</span></td></tr>
+      <tr><td>Shares Owned:</td><td><span class="badge pull-right">{{portfolio.shares}}</span></td></tr>
+      <tr><td>Portfolio Value:</td><td><span class="badge pull-right">{{math portfolio.value "+" 0 precision=2 thousands="," prefix="$"}}</span></td></tr>
+    </tbody></table>
+  </div>
+  <div class="panel-footer">
+    <div class="row">
+      <span class="pull-right">
+        <a class="btn btn-info btn-xs view-friend" href="<%= friends_path %>/{{user_id}}">
+          <i class="glyphicon glyphicon-user"></i>
+          View
+        </a>
+        <button class="btn btn-danger btn-xs remove-friendship">
+          <i class="glyphicon glyphicon-trash"></i>
+          Remove
+        </button>
+      </span>
+    </div>
+  </div>
+</div>
+</script>
+
+
 <script type="text/x-handlebars-template" id="handlebars-stock_search_result">
 <div class="container">
   <div class="row" data-rm-action="replace">
@@ -82,6 +116,21 @@
       {{> stock}}
     </div>
   </div>
+</div>
+</script>
+
+
+<script type="text/x-handlebars-partial" id="handlebars-portfolio_list">
+<div class="row" {{#if removeable}}data-rm-action="remove"{{/if}}>
+  {{#each data.stocks}}
+    <div class="col-md-4">
+      {{> stock}}
+    </div>
+   {{else}}
+   <div class="col-md-4">
+     <p>No stocks in {{#if pronoun}}{{pronoun}}{{else}}their{{/if}} portfolio.</p>
+   </div>
+  {{/each}}
 </div>
 </script>
 
@@ -97,17 +146,7 @@
       </small>
       <hr/>
     </h2>
-    <div class="row" data-rm-action="remove">
-      {{#each data.stocks}}
-        <div class="col-md-4">
-          {{> stock}}
-        </div>
-       {{else}}
-       <div class="col-md-4">
-         <p>No stocks in your portfolio.</p>
-       </div>
-      {{/each}}
-    </div>
+    {{> portfolio_list removeable=true pronoun="your"}}
   </div>
 </script>
 
@@ -119,8 +158,14 @@
       <small>({{data.friends.length}} friends)</small>
     </h2>
     <div class="row">
-      <div class="col-md-10 col-md-offset-1">
         {{#if data.friends}}
+          {{#each data.friends}}
+            <div class="col-md-3">
+              {{> friend}}
+            </div>
+          {{/each}}
+        {{else}}
+      <div class="col-md-10 col-md-offset-1">
         <table class="table table-striped centering">
           <thead>
             <tr>
@@ -141,7 +186,7 @@
               <td>{{portfolio.shares}}</td>
               <td>{{math portfolio.value "+" 0 precision=2 thousands="," prefix="$"}}</td>
               <td>
-                <button class="btn btn-info btn-xs view-friend-portfolio">
+                <button class="btn btn-info btn-xs view-friend">
                   <i class="glyphicon glyphicon-user"></i>
                   View
                 </button>
@@ -154,10 +199,42 @@
             {{/each}}
           </tbody>
         </table>
+      </div>
         {{/if}}
+    </div>
+  </div>
+</script>
+
+
+<script type="text/x-handlebars-template" id="handlebars-friend_portfolio">
+<div class="container friend-portfolio">
+  <div class="row center">
+    <div class="col-md-6 col-md-offset-3" id="friendinfo">
+      <h3>
+        {{data.friend.fullname}}<br/>
+        <small><%= mail_to '{{data.friend.email}}' %></small>
+      </h3>
+      <div class="row">
+        <div class="col-md-3">
+          Stocks Watched: <span class="badge">{{data.portfolio.watches}}</span>
+        </div>
+        <div class="col-md-3">
+          Stocks Owned: <span class="badge">{{data.portfolio.stocks}}</span>
+        </div>
+        <div class="col-md-3">
+          Shares Owned: <span class="badge">{{data.portfolio.shares}}</span>
+        </div>
+        <div class="col-md-3">
+          Portfolio Value: <span class="badge">
+            {{math data.portfolio.value "+" 0 precision=2 thousands="," prefix="$"}}
+          </span>
+        </div>
       </div>
     </div>
   </div>
+  <hr/>
+  {{> portfolio_list}}
+</div>
 </script>
 
 
@@ -206,7 +283,6 @@ $(function () {
       }),
       search_val = nav_search.closest('div').find('input[type="text"]').val(),
       spinner;
-  <% if user_signed_in? %>
 
   const toggle_spinners = ($btn) => {
     $btn.parent().find('button').each(function () {
@@ -214,6 +290,7 @@ $(function () {
     });
   }
 
+  <% if user_signed_in? %>
 
   $(document)
     // Manipulating stock portfolio
@@ -246,12 +323,8 @@ $(function () {
         dataType: 'json',
         beforeSend: toggle_spinners($btn)
       })
-        .done(function (data) {
-          $this.replaceWith(templates.stock(data.data));
-        })
-        .fail(function (data) {
-          $this.replaceWith(templates.error({msg: 'Failed to add stock.'}));
-        });
+        .done((data) => { $this.replaceWith(templates.stock(data.data)); })
+        .fail((data) => { $this.replaceWith(templates.error({msg: 'Failed to add stock.'})); });
     })
     .on('click', 'button.remove-stock-from-portfolio, button.remove-stock-from-watchlist', function () {
       var $btn = $(this),
@@ -265,38 +338,35 @@ $(function () {
         dataType: 'json',
         beforeSend: toggle_spinners($btn)
       })
-        .done(function (data) {
+        .done((data) => {
           if (action == 'remove') {
             $this.parent().remove();
           } else {
             $this.replaceWith(templates.stock(data.data));
           }
         })
-        .fail(function (data) {
-          $this.replaceWith(templates.error({msg: 'Failed to remove stock.'}));
-        });
+        .fail((data) => { $this.replaceWith(templates.error({msg: 'Failed to remove stock.'})); });
     })
 
     // manipulating friendships
-    .on('click', 'button.view-friend-portfolio', function () {
-      window.location.href = '<%= portfolio_path %>/' + $(this).closest('[data-user-id]').attr('data-user-id');
+    .on('click', 'button.view-friend', function () {
+      window.location.href = '<%= friends_path %>/' + $(this).closest('[data-user-id]').attr('data-user-id');
+    })
+    .on('click', 'button.add-friendship', function () {
+      window.location.href = '<%= friends_path %>/' + $(this).closest('[data-user-id]').attr('data-user-id');
     })
     .on('click', 'button.remove-friendship', function () {
       var $btn = $(this),
           user_id = $btn.closest('[data-user-id]').attr('data-user-id');
 
       $.ajax({
-        url: '<%= portfolio_path %>/' + user_id,
+        url: '<%= friends_path %>/' + user_id,
         method: 'DELETE',
         dataType: 'json',
         beforeSend: toggle_spinners($btn)
       })
-        .done(function (data) {
-          $this.closest('tr').remove();
-        })
-        .fail(function (data) {
-          $this.replaceWith(templates.error({msg: 'Failed to remove friendship.'}));
-        });
+        .done((data) => { $this.closest('tr').remove(); })
+        .fail((data) => { $this.replaceWith(templates.error({msg: 'Failed to remove friendship.'})); });
     });
 
 
@@ -350,6 +420,7 @@ $(function () {
       console.log(templates.hasOwnProperty(id), id + ' ' + type + ' loaded.', this);
     };
   })());
+  spinner = templates.spinner();
 
 
   // Immediate executions
@@ -360,7 +431,5 @@ $(function () {
   window.railsstockapp = {
     templates: templates
   };
-
-  spinner = templates.spinner();
 });
 </script>
