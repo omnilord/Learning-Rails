@@ -24,7 +24,7 @@ Rails.application.routes.draw do
 
   get 'friends' => 'users#friends'
   get 'friends/:id' => 'users#friend'
-  get 'search/friends' => 'users#search'
+  get 'search/users' => 'users#search'
   post 'friends' => 'users#add_friend'
   delete 'friends' => 'users#remove_friend'
 

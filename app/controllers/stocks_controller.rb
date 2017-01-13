@@ -1,7 +1,7 @@
 class StocksController < ApplicationController
   def search
-    if params[:stock]
-      @stock = Stock.fetch_stock(params[:stock])
+    if params[:search]
+      @stock = Stock.fetch_stock(params[:search])
       if @stock
         @owned = user_signed_in? ?
                    @stock.user_stocks.where('user_id = ?', current_user.id).first : nil
