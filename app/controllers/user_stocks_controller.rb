@@ -1,4 +1,4 @@
-class UserStocksController < ApplicationController
+class UserStocksController < AuthAppController
   before_action :set_user_stock, only: [:show, :edit, :update, :destroy]
 
   # GET /user_stocks

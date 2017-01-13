@@ -17,6 +17,15 @@ $navbar-default-link-active-color: $navbar-default-color-global;
   text-align: center;
 }
 
+.invis {
+  display: none;
+}
+
+.marked:after {
+  content: '\2713';
+  margin-left: 4px;
+}
+
 .no-padding {
   padding: 0 !important;
 }

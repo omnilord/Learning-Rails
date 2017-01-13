@@ -271,7 +271,7 @@ $(function () {
         TODO: Because of TurboLinks, need to fix these search form callbacks so
               they work after visiting other links.
       */
-      nav_search = $('#search-stock-form').on({
+      nav_search = $('#search-stocks-form').on({
         'ajax:success': function (ev, data, status) {
           maindiv.html(templates.stock_search_result(data.data));
         },

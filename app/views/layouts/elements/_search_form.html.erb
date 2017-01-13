@@ -1,0 +1,49 @@
+<%
+search_drop =
+  if searches.length == 1
+    searches.first[:default] = true
+    ''
+  else
+    searches.map do |search|
+      <<-ENDHTML
+      <li>
+        <a href="#" class="toggle-form#{search[:default] ? ' marked' :  ''}" data-searchfor="#{search[:name]}">
+          <i class="fa fa-"#{search[:icon]}"></i> #{search[:placeholder]}
+        </a>
+      </li>
+      ENDHTML
+    end.join("\n")
+  end
+%>
+
+<% searches.each do |search| %>
+<div class="toggling-form<%= search[:default] ? '' :  ' invis' %>" data-searchfor="<%= search[:name] %>">
+  <%= form_tag search[:search_path], remote: true, method: :get,
+                          id: "search-#{search[:name]}-form",
+                          class: 'navbar-form navbar-right' do %>
+    <div class="input-group form-group">
+      <%= text_field_tag :search, nil,
+                            placeholder: search[:placeholder],
+                            class: 'form-control',
+                            value: search[:value] %>
+      <span class="input-group-btn btn-group">
+        <%= button_tag name: nil, type: :submit, class: 'btn btn-default' do %>
+          <i class="glyphicon glyphicon-search"></i>
+        <% end %>
+        <% if search[:default] && !search_drop.empty? %>
+          <%= button_tag name: nil, type: :button,
+                          data: { toggle: 'dropdown' },
+                          aria: { haspopup: 'true', expanded: 'false' },
+                          class: 'btn btn-default dropdown-toggle' do %>
+            <span class="caret"></span>
+            <span class="sr-only">Search Type</span>
+          <% end %>
+          <ul class="dropdown-menu">
+            <%= search_drop.html_safe %>
+          </ul>
+        <% end %>
+      </span>
+    </div>
+  <% end %>
+</div>
+<% end %>
