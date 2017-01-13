@@ -8,7 +8,7 @@ search_drop =
       <<-ENDHTML
       <li>
         <a href="#" class="toggle-form#{search[:default] ? ' marked' :  ''}" data-searchfor="#{search[:name]}">
-          <i class="fa fa-"#{search[:icon]}"></i> #{search[:placeholder]}
+          <i class="fa fa-#{search[:icon]}"></i> #{search[:name]}
         </a>
       </li>
       ENDHTML
@@ -35,7 +35,7 @@ search_drop =
                           data: { toggle: 'dropdown' },
                           aria: { haspopup: 'true', expanded: 'false' },
                           class: 'btn btn-default dropdown-toggle' do %>
-            <span class="caret"></span>
+            <i class="fa fa-<%= search[:icon] %>"></i>
             <span class="sr-only">Search Type</span>
           <% end %>
           <ul class="dropdown-menu">

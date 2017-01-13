@@ -48,17 +48,17 @@
         <li class="toggling-forms-parent">
           <%= render 'layouts/elements/search_form', searches: [
             {
-              name: 'stocks',
+              name: 'Stocks',
               icon: 'line-chart',
               search_path: search_stocks_path,
-              placeholder: 'Search Ticker',
+              placeholder: 'Ticker',
               value: (params['s'].nil? ? nil : params['s']),
               default: true
             }, {
-              name: 'users',
+              name: 'Users',
               icon: 'users',
               search_path: search_users_path,
-              placeholder: 'Search Users',
+              placeholder: 'Username, Email...',
               value: (params['u'].nil? ? nil : params['u']),
             }
           ] %>
