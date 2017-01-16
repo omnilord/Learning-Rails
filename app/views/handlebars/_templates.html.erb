@@ -76,33 +76,40 @@
 
 
 <script type="text/x-handlebars-partial" id="handlebars-friend">
-<div class="panel panel-info friend" data-user-id="{{user_id}}">
+<div class="panel panel-info friend" data-user-id="{{friend.user_id}}">
   <div class="panel-heading">
     <h3 class="panel-title">
-      <span class="username">{{fullname}}</span><br/>
-      <small>{{email}}</small>
+      <span class="username">{{friend.fullname}}</span><br/>
+      <small>{{friend.email}}</small>
     </h3>
   </div>
   <div class="panel-body">
-    <table><tbody>
-      <tr><td>Stocks Watched:</td><td><span class="badge pull-right">{{portfolio.watches}}</span></td></tr>
-      <tr><td>Stocks Owned:</td><td><span class="badge pull-right">{{portfolio.stocks}}</span></td></tr>
-      <tr><td>Shares Owned:</td><td><span class="badge pull-right">{{portfolio.shares}}</span></td></tr>
-      <tr><td>Portfolio Value:</td><td><span class="badge pull-right">{{math portfolio.value "+" 0 precision=2 thousands="," prefix="$"}}</span></td></tr>
-    </tbody></table>
+    <div>Stocks Watched: <span class="badge pull-right">{{portfolio.watches}}</span></div>
+    <div>Stocks Owned: <span class="badge pull-right">{{portfolio.stocks}}</span></div>
+    <div>Shares Owned: <span class="badge pull-right">{{portfolio.shares}}</span></div>
+    <div>Portfolio Value: <span class="badge pull-right">{{math portfolio.value "+" 0 precision=2 thousands="," prefix="$"}}</span></div>
   </div>
   <div class="panel-footer">
     <div class="row">
-      <span class="pull-right">
-        <a class="btn btn-info btn-xs view-friend" href="<%= friends_path %>/{{user_id}}">
-          <i class="glyphicon glyphicon-user"></i>
-          View
-        </a>
-        <button class="btn btn-danger btn-xs remove-friendship">
-          <i class="glyphicon glyphicon-trash"></i>
-          Remove
-        </button>
-      </span>
+      <div class="col-md-8 col-md-offset-4">
+        <span class="pull-right">
+          <a class="btn btn-info btn-xs view-friend" href="<%= friends_path %>/{{friend.user_id}}">
+            <i class="glyphicon glyphicon-user"></i>
+            View
+          </a>
+          {{#if friend.is_friend}}
+            <button class="btn btn-danger btn-xs remove-friendship">
+              <i class="glyphicon glyphicon-trash"></i>
+              Remove
+            </button>
+          {{else}}
+            <button class="btn btn-success btn-xs add-friendship">
+              <i class="glyphicon glyphicon-plus"></i>
+              Add Friend
+            </button>
+          {{/if}}
+        </span>
+      </div>
     </div>
   </div>
 </div>
@@ -165,40 +172,8 @@
             </div>
           {{/each}}
         {{else}}
-      <div class="col-md-10 col-md-offset-1">
-        <table class="table table-striped centering">
-          <thead>
-            <tr>
-              <th>Friend</th>
-              <th>Stocks Owned</th>
-              <th>Stocks Watched</th>
-              <th>Shares</th>
-              <th>Value</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each data.friends}}
-            <tr data-user-id="{{user_id}}">
-              <td>{{fullname}}<br/><small>{{email}}</small></td>
-              <td>{{portfolio.stocks}}</td>
-              <td>{{portfolio.watches}}</td>
-              <td>{{portfolio.shares}}</td>
-              <td>{{math portfolio.value "+" 0 precision=2 thousands="," prefix="$"}}</td>
-              <td>
-                <button class="btn btn-info btn-xs view-friend">
-                  <i class="glyphicon glyphicon-user"></i>
-                  View
-                </button>
-                <button class="btn btn-danger btn-xs remove-friendship">
-                  <i class="glyphicon glyphicon-trash"></i>
-                  Remove
-                </button>
-              </td>
-            </tr>
-            {{/each}}
-          </tbody>
-        </table>
+      <div class="col-md-10 col-md-offset-1 center">
+        You have no friends.
       </div>
         {{/if}}
     </div>
@@ -238,6 +213,17 @@
 </script>
 
 
+<script type="text/x-handlebars-template" id="handlebars-user_search_result">
+<div class="container">
+  <div class="row" data-rm-action="replace">
+    <div class="col-md-3 col-md-offset-2">
+      {{> friend}}
+    </div>
+  </div>
+</div>
+</script>
+
+
 <script type="text/x-handlebars-template" id="handlebars-error">
 <div class="container">
   <div class="row">
@@ -270,22 +256,25 @@ $(function () {
       /*
         TODO: Because of TurboLinks, need to fix these search form callbacks so
               they work after visiting other links.
+        TODO: Show search results in a popup dialog instead of inside the page's
+              main content div.
       */
-      nav_search = $('#search-stocks-form').on({
+      nav_search = $('.search-form').on({
         'ajax:success': function (ev, data, status) {
-          maindiv.html(templates.stock_search_result(data.data));
+          var callback = $(this).data('template');
+          maindiv.html(templates[callback](data.data));
         },
         'ajax:before': function () {
           maindiv.html(templates.spinner());
         },
-        'ajax:after': function () {
-          maindiv.html(templates.spinner());
-        },
         'ajax:error': function (ev, xhr, status, err) {
-          maindiv.html(templates.error({msg: 'No stocks found.'}));
+          var type = $(this).closest('.toggling-form').data('searchfor');
+          maindiv.html(templates.error({ msg: 'No ' + type + ' found.' }));
         }
-      }),
-      search_val = nav_search.closest('div').find('input[type="text"]').val(),
+      }).filter(function () {
+        return !$(this).closest('.toggling-form').is('.invis');
+      }).first(),
+      search_val = nav_search.find('input[type="text"]').val(),
       spinner;
 
   const toggle_spinners = ($btn) => {
@@ -385,17 +374,15 @@ $(function () {
 
 
   // Pre-load helpers
-  Handlebars.registerHelper('math', function (lvalue, operator, rvalue, options) {
-    lvalue = parseFloat(lvalue);
-    rvalue = parseFloat(rvalue);
+  Handlebars.registerHelper('math', function (l, op, r, options) {
+    l = parseFloat(l);
+    r = parseFloat(r);
 
-    var v = {
-        '+': lvalue + rvalue,
-        '-': lvalue - rvalue,
-        '*': lvalue * rvalue,
-        '/': lvalue / rvalue,
-        '%': lvalue % rvalue
-    }[operator].toFixed(options.hash.precision || -1);
+    var v = { '+': (l + r), '-': (l - r), '*': (l * r), '/': (l / r), '%': (l % r) }[op];
+    if (isNaN(v)) {
+      return options.hash.hasOwnProperty('onNaN') ? options.hash.onNaN : '';
+    }
+    v = v.toFixed(options.hash.precision || -1);
     if (options.hash.thousands) {
       v = v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, options.hash.thousands);
     }
@@ -421,7 +408,9 @@ $(function () {
         partials[id] = Handlebars.registerPartial(id, this.innerHTML);
       }
       templates[id] = Handlebars.compile(this.innerHTML);
+      <% if Rails.env.development? %>
       console.log(templates.hasOwnProperty(id), id + ' ' + type + ' loaded.', this);
+      <% end %>
     };
   })());
   spinner = templates.spinner();

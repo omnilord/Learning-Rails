@@ -15,6 +15,26 @@ class User < ActiveRecord::Base
     name.empty? ? "My Profile" : name
   end
 
+  def friend?(user)
+    Friendship.exists? user: self, friend: user
+  end
+  
+  def friendship_summary(current_user)
+    {
+      friend: {
+        user_id: self.id,
+        fullname: self.fullname,
+        email: self.email,
+        is_friend: current_user.friend?(self),
+        has_friend: self.friend?(current_user)
+      },
+      portfolio: self.portfolio_summary,
+      stocks: self.user_stocks.map do |tracking|
+        { stock: tracking.stock, track: tracking }
+      end
+    }
+  end
+
   def portfolio_summary
     value = 0
     shares = 0

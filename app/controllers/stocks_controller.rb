@@ -3,23 +3,30 @@ class StocksController < ApplicationController
     if params[:search]
       @stock = Stock.fetch_stock(params[:search])
       if @stock
-        @owned = user_signed_in? ?
-                   @stock.user_stocks.where('user_id = ?', current_user.id).first : nil
-        render json: { status: :ok, data: { stock: @stock, track: @owned } }
+        render_json do
+          {
+            stock: @stock,
+            track: user_signed_in? ?
+                    # REVIEW: Not sure which of these is considered "better":
+                    #         Using the second because it looks cleaner.
+                    # @stock.user_stocks.where('user_id = ?', current_user.id).first : nil
+                    UserStock.where(user: current_user, stock: @stock).first : nil
+          }
+        end
       else
-        render status: :not_found, nothing: true
+        render_status :not_found
       end
     else
-      render partial: 'search'
+      render_status :bad_request
     end
   end
 
   def index
     @stocks = Stock.order(ticker: :asc).paginate(page: params[:page], per_page: 20)
     if @stocks
-      render json: @stocks
+      render_json { @stocks }
     else
-      render status: :not_found, nothing: true
+      render_status :not_found
     end
   end
 end

@@ -53,13 +53,16 @@
               search_path: search_stocks_path,
               placeholder: 'Ticker',
               value: (params['s'].nil? ? nil : params['s']),
-              default: true
+              template: 'stock_search_result',
+              default: !params['s'].nil? || params['u'].nil?
             }, {
               name: 'Users',
               icon: 'users',
               search_path: search_users_path,
               placeholder: 'Username, Email...',
               value: (params['u'].nil? ? nil : params['u']),
+              template: 'user_search_result',
+              default: params['s'].nil? && params['u'].present?
             }
           ] %>
         </li>

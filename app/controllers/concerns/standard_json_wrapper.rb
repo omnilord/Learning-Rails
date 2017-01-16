@@ -2,18 +2,21 @@ module StandardJSONWrapper
   extend ActiveSupport::Concern
 
   def render_json
+    wrapper = {}
+
     begin
-      render json: {
-        status: :ok,
-        data: yield
-      }
+      wrapper[:data] = yield
     rescue Exception => ex
-      render json: {
-        status: :internal_server_error,
-        data: {
-          msg: Rails.env.development? ? ex.message : "There was an error."
-        }
-      }
+      wrapper[:status] = :internal_server_error
+      flash[:danger] = Rails.env.development? ? ex.message : "There was an error."
     end
+
+    wrapper[:flash] = flash.to_hash
+    render json: wrapper
+    flash.clear
+  end
+
+  def render_status(code)
+    render status: code, nothing: true
   end
 end

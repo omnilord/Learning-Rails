@@ -3,21 +3,15 @@ class UsersController < AuthAppController
 
   def portfolio
     respond_to do |format|
-      if @user.nil?
-        flash[:danger] = 'Please sign in first.';
-        format.html { redirect_to root_path }
-        format.json { render json: { status: :unauthorized } }
-      else
-        format.html { render :portfolio }
-        format.json do
-          render_json do
-            {
-              portfolio: @user.portfolio_summary,
-              stocks: @user.user_stocks.map do |tracking|
-                { stock: tracking.stock, track: tracking }
-              end
-            }
-          end
+      format.html { render :portfolio }
+      format.json do
+        render_json do
+          {
+            portfolio: @user.portfolio_summary,
+            stocks: @user.user_stocks.map do |tracking|
+              { stock: tracking.stock, track: tracking }
+            end
+          }
         end
       end
     end
@@ -25,43 +19,23 @@ class UsersController < AuthAppController
 
   def friends
     respond_to do |format|
-      if @user.nil?
-        flash[:danger] = 'Please sign in first.';
-        format.html { redirect_to root_path }
-        format.json { render json: { status: :unauthorized } }
-      else
-        format.html { render :friends }
-        format.json do
-          render_json do
-            {
-              friends: @user.friends.map do |friend|
-                {
-                  user_id: friend.id,
-                  fullname: friend.fullname,
-                  email: friend.email,
-                  portfolio: friend.portfolio_summary
-                }
-              end
-            }
-          end
+      format.html { render :friends }
+      format.json do
+        render_json do
+          {
+            friends: @user.friends.map do |friend|
+              friend.friendship_summary(current_user)
+            end
+          }
         end
       end
     end
   end
 
   def friend
-    @friend =
-      begin
-        User.find(params[:id])
-      rescue
-        nil
-      end
+    @friend = User.find(params[:id]) rescue nil
     respond_to do |format|
-      if @user.nil?
-        flash[:danger] = 'Please sign in first.';
-        format.html { redirect_to root_path }
-        format.json { render json: { status: :unauthorized } }
-      elsif @friend.nil?
+      if @friend.nil?
         flash[:danger] = 'No user found.';
         format.html { redirect_to root_path }
         format.json { render json: { status: :not_found } }
@@ -69,16 +43,7 @@ class UsersController < AuthAppController
         format.html { render :friend }
         format.json do
           render_json do
-            {
-              friend: {
-                fullname: @friend.fullname,
-                email: @friend.email
-              },
-              portfolio: @friend.portfolio_summary,
-              stocks: @friend.user_stocks.map do |tracking|
-                { stock: tracking.stock, track: tracking }
-              end
-            }
+            @friend.friendship_summary(current_user)
           end
         end
       end
@@ -86,11 +51,22 @@ class UsersController < AuthAppController
   end
 
   def search
-    #code
+    @users = User.where('email LIKE ?', "%#{params[:search]}%") #, omit: [current_user])
+    if @users
+      render_json do
+        {
+          users: @users.map do |user|
+            user.friendship_summary(current_user)
+          end
+        }
+      end
+    else
+      render_status :not_found
+    end
   end
 
   def add_friend
-    #code
+    @friend = User.find(params[:id])
   end
 
   def remove_friend
