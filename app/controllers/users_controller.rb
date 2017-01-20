@@ -33,7 +33,9 @@ class UsersController < AuthAppController
   end
 
   def friend
+    # HACK: using inline rescue
     @friend = User.find(params[:id]) rescue nil
+
     respond_to do |format|
       if @friend.nil?
         flash[:danger] = 'No user found.';
@@ -51,7 +53,7 @@ class UsersController < AuthAppController
   end
 
   def search
-    @users = User.where('email LIKE ?', "%#{params[:search]}%") #, omit: [current_user])
+    @users = User.search(params[:search])
     if @users
       render_json do
         {
@@ -66,11 +68,36 @@ class UsersController < AuthAppController
   end
 
   def add_friend
-    @friend = User.find(params[:id])
+    # HACK: using inline rescue
+    @friend = User.find(params[:id]) rescue nil
+    if @friend
+      current_user.friends << @friend
+      current_user.save
+
+      render_json do
+        @friend.friendship_summary(current_user)
+      end
+    else
+      render_status :not_found
+    end
   end
 
   def remove_friend
-    #code
+    # HACK: using inline rescue
+    @friend = User.find(params[:id]) rescue nil
+    if @friend
+      current_user.friendships.delete(Friendship.where(user_id: current_user.id, friend_id: @friend.id))
+      current_user.save
+
+      @friend.reload
+      current_user.reload
+
+      render_json do
+        @friend.friendship_summary(current_user)
+      end
+    else
+      render_status :not_found
+    end
   end
 
   private

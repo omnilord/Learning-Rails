@@ -25,8 +25,8 @@ Rails.application.routes.draw do
   get 'friends' => 'users#friends'
   get 'friends/:id' => 'users#friend'
   get 'search/users' => 'users#search'
-  post 'friends' => 'users#add_friend'
-  delete 'friends' => 'users#remove_friend'
+  post 'friends/:id' => 'users#add_friend'
+  delete 'friends/:id' => 'users#remove_friend'
 
 
   # Catch all to prevent generic 404 errors from rendering

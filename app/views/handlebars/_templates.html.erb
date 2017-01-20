@@ -128,7 +128,7 @@
 
 
 <script type="text/x-handlebars-partial" id="handlebars-portfolio_list">
-<div class="row" {{#if removeable}}data-rm-action="remove"{{/if}}>
+<div class="row" data-rm-action="{{#if removeable}}remove{{else}}replace{{/if}}">
   {{#each data.stocks}}
     <div class="col-md-4">
       {{> stock}}
@@ -164,7 +164,7 @@
       My Friends
       <small>({{data.friends.length}} friends)</small>
     </h2>
-    <div class="row">
+    <div class="row" data-rm-action="remove">
         {{#if data.friends}}
           {{#each data.friends}}
             <div class="col-md-3">
@@ -172,9 +172,9 @@
             </div>
           {{/each}}
         {{else}}
-      <div class="col-md-10 col-md-offset-1 center">
-        You have no friends.
-      </div>
+          <div class="col-md-10 col-md-offset-1 center">
+            You have no friends.
+          </div>
         {{/if}}
     </div>
   </div>
@@ -215,10 +215,22 @@
 
 <script type="text/x-handlebars-template" id="handlebars-user_search_result">
 <div class="container">
+  <h2 align="center">
+    Users
+    <small>({{users.length}} found)</small>
+  </h2>
   <div class="row" data-rm-action="replace">
-    <div class="col-md-3 col-md-offset-2">
-      {{> friend}}
-    </div>
+      {{#if users}}
+        {{#each users}}
+          <div class="col-md-3">
+            {{> friend}}
+          </div>
+        {{/each}}
+      {{else}}
+        <div class="col-md-10 col-md-offset-1 center">
+          No users found.
+        </div>
+      {{/if}}
   </div>
 </div>
 </script>
@@ -346,11 +358,26 @@ $(function () {
       window.location.href = '<%= friends_path %>/' + $(this).closest('[data-user-id]').attr('data-user-id');
     })
     .on('click', 'button.add-friendship', function () {
-      window.location.href = '<%= friends_path %>/' + $(this).closest('[data-user-id]').attr('data-user-id');
+      var $btn = $(this),
+          $this = $btn.closest('[data-user-id]'),
+          friend_name = $this.find('span.username').text(),
+          user_id = $this.attr('data-user-id');
+
+      $.ajax({
+        url: '<%= friends_path %>/' + user_id,
+        method: 'POST',
+        dataType: 'json',
+        beforeSend: toggle_spinners($btn)
+      })
+        .done((data) => { $this.replaceWith(templates.friend(data.data)); })
+        .fail((data) => { $this.replaceWith(templates.error({msg: 'Failed to add "' + friend_name + '" to friends.'})); });
     })
     .on('click', 'button.remove-friendship', function () {
       var $btn = $(this),
-          user_id = $btn.closest('[data-user-id]').attr('data-user-id');
+          $this = $btn.closest('[data-user-id]'),
+          friend_name = $this.find('span.username').text(),
+          user_id = $this.attr('data-user-id'),
+          action = $this.closest('[data-rm-action]').attr('data-rm-action');
 
       $.ajax({
         url: '<%= friends_path %>/' + user_id,
@@ -358,8 +385,14 @@ $(function () {
         dataType: 'json',
         beforeSend: toggle_spinners($btn)
       })
-        .done((data) => { $this.closest('tr').remove(); })
-        .fail((data) => { $this.replaceWith(templates.error({msg: 'Failed to remove friendship.'})); });
+        .done((data) => {
+          if (action == 'remove') {
+            $this.parent().remove();
+          } else {
+            $this.replaceWith(templates.friend(data.data));
+          }
+        })
+        .fail((data) => { $this.replaceWith(templates.error({msg: 'Failed to remove friendship with "' + friend_name + '".'})); });
     });
 
 

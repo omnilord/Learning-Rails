@@ -10,6 +10,20 @@ class User < ActiveRecord::Base
 
   attr_accessor :mfa # virtual field for sign-up form to allow redirecting to Authy setup
 
+  class << self
+    def search(search)
+      search.strip!
+      search.downcase!
+      User.none if search.blank?
+
+      (matches('email', search) + matches('first_name', search) + matches('last_name', search)).uniq
+    end
+
+    def matches(field, search)
+      where("lower(#{field}) LIKE ?", "%#{search}%")
+    end
+  end
+
   def fullname
     name = "#{first_name} #{last_name}".strip
     name.empty? ? "My Profile" : name
@@ -18,7 +32,7 @@ class User < ActiveRecord::Base
   def friend?(user)
     Friendship.exists? user: self, friend: user
   end
-  
+
   def friendship_summary(current_user)
     {
       friend: {
