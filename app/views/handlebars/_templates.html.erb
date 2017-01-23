@@ -316,7 +316,6 @@ $(function () {
             'ajax:before': () => { maindiv.html(templates.spinner()); },
             'ajax:success': function (ev, data, status) {
               var callback = $(this).data('template');
-              console.log([this, callback, data.data]);
               maindiv.html(templates[callback](data.data));
             },
             'ajax:error': function (ev, xhr, status, err) {
@@ -397,20 +396,39 @@ $(function () {
       window.location.href = '<%= friends_path %>/' + $(this).closest('[data-user-id]').attr('data-user-id');
     })
     .on('click', 'button.add-friendship', function () {
-      window.location.href = '<%= friends_path %>/' + $(this).closest('[data-user-id]').attr('data-user-id');
+      var $btn = $(this),
+          $this = $btn.closest('[data-user-id]'),
+          friend_name = $this.find('span.username').text(),
+          user_id = $this.attr('data-user-id');
+      $.ajax({
+        url: '<%= friends_path %>/' + user_id,
+        method: 'POST',
+        dataType: 'json',
+        beforeSend: toggle_spinners($btn)
+      })
+        .done((data) => { $this.replaceWith(templates.friend(data.data)); })
+        .fail((data) => { $this.replaceWith(templates.error({msg: 'Failed to add "' + friend_name + '" to friends.'})); });
     })
     .on('click', 'button.remove-friendship', function () {
       var $btn = $(this),
-          user_id = $btn.closest('[data-user-id]').attr('data-user-id');
-
+          $this = $btn.closest('[data-user-id]'),
+          friend_name = $this.find('span.username').text(),
+          user_id = $this.attr('data-user-id'),
+          action = $this.closest('[data-rm-action]').attr('data-rm-action');
       $.ajax({
         url: '<%= friends_path %>/' + user_id,
         method: 'DELETE',
         dataType: 'json',
         beforeSend: toggle_spinners($btn)
       })
-        .done((data) => { $this.closest('tr').remove(); })
-        .fail((data) => { $this.replaceWith(templates.error({msg: 'Failed to remove friendship.'})); });
+        .done((data) => {
+          if (action == 'remove') {
+            $this.parent().remove();
+          } else {
+            $this.replaceWith(templates.friend(data.data));
+          }
+        })
+        .fail((data) => { $this.replaceWith(templates.error({msg: 'Failed to remove friendship with "' + friend_name + '".'})); });
     })
 
     // Handle numeric inputs into the count input
