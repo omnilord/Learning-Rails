@@ -7,6 +7,7 @@ class UsersController < AuthAppController
       format.json do
         render_json do
           {
+            logged_in: user_signed_in?,
             portfolio: @user.portfolio_summary,
             stocks: @user.user_stocks.map do |tracking|
               { stock: tracking.stock, track: tracking }

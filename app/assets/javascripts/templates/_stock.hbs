@@ -9,27 +9,26 @@
     <span class="stock-name">{{stock.name}}</span>
   </div>
   <div class="panel-footer">
-    <% if user_signed_in? %>
+    {{#if logged_in}}
       <div class="row">
         <div class="col-md-4">
           <div class="input-group input-group-sm form-group form-group-sm" style="margin-bottom: 0; text-align: left;">
-            <%= number_field_tag nil, nil,
-                                 placeholder: '#',
-                                 class: 'form-control stock-count-edit',
-                                 style: 'width: 4em',
-                                 min: '0' %>
+            <input type="number" placeholder="#"
+                                 class="form-control stock-count-edit"
+                                 style="width: 4em"
+                                 min="0" />
             <span class="input-group-btn pull-left">
-              <%= button_tag name: nil, type: :button, class: 'btn btn-primary add-stock-to-portfolio' do %>
+              <button class="btn btn-primary add-stock-to-portfolio">
                 <i class="glyphicon glyphicon-plus"></i>
-              <% end %>
+              </button>
               {{#if track}}
                 {{#if track.owned}}
-                  <%= button_tag name: nil, type: :button, class: 'btn btn-warning subtract-stock-from-portfolio' do %>
+                  <button class="btn btn-warning subtract-stock-from-portfolio">
                     <i class="glyphicon glyphicon-minus"></i>
-                  <% end %>
-                  <%= button_tag name: nil, type: :button, class: 'btn btn-danger remove-stock-from-portfolio' do %>
+                  </button>
+                  <button class="btn btn-danger remove-stock-from-portfolio">
                     <i class="glyphicon glyphicon-trash"></i>
-                  <% end %>
+                  </button>
                 {{/if}}
               {{/if}}
             </span>
@@ -41,17 +40,17 @@
             <div><small>Shares owned:</small> <strong>{{track.owned}}</strong></div>
             <div><small>Value:</small> <strong>{{math track.owned "*" stock.last_price precision=2 thousands="," prefix="$"}}</strong></div>
           {{else if track}}
-          <%= button_tag name: nil, type: :button, class: 'btn btn-primary remove-stock-from-watchlist' do %>
+          <button class="btn btn-primary remove-stock-from-watchlist">
             <i class="glyphicon glyphicon-eye-close"></i>
-          <% end %>
+          </button>
           {{else}}
-          <%= button_tag name: nil, type: :button, class: 'btn btn-primary add-stock-to-watchlist' do %>
+          <button class="btn btn-primary add-stock-to-watchlist">
             <i class="glyphicon glyphicon-eye-open"></i>
-          <% end %>
+          </button>
           {{/if}}
           </span>
         </div>
       </div>
-    <% end %>
+    {{/if}}
   </div>
 </div>

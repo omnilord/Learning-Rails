@@ -15,19 +15,16 @@
     <div class="row">
       <div class="col-md-8 col-md-offset-4">
         <span class="pull-right">
-          <a class="btn btn-info btn-xs view-friend" href="<%= friends_path %>/{{friend.user_id}}">
-            <i class="glyphicon glyphicon-user"></i>
-            View
-          </a>
+          <button class="btn btn-info btn-xs view-friend">
+            <i class="glyphicon glyphicon-user"></i> View
+          </button>
           {{#if friend.is_friend}}
             <button class="btn btn-danger btn-xs remove-friendship">
-              <i class="glyphicon glyphicon-trash"></i>
-              Remove
+              <i class="glyphicon glyphicon-trash"></i> Remove
             </button>
           {{else}}
             <button class="btn btn-success btn-xs add-friendship">
-              <i class="glyphicon glyphicon-plus"></i>
-              Add Friend
+              <i class="glyphicon glyphicon-plus"></i> Add Friend
             </button>
           {{/if}}
         </span>

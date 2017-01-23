@@ -5,6 +5,7 @@ class StocksController < ApplicationController
       if @stock
         render_json do
           {
+            logged_in: user_signed_in?,
             stock: @stock,
             track: user_signed_in? ?
                     # REVIEW: Not sure which of these is considered "better":
