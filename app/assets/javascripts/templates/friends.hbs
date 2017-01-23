@@ -1,0 +1,17 @@
+<div class="container">
+  <h2 align="center">
+    My Friends
+    <small>({{data.friends.length}} friends)</small>
+  </h2>
+  <div class="row" data-rm-action="remove">
+    {{#each data.friends}}
+      <div class="col-md-3">
+        {{> _friend}}
+      </div>
+    {{else}}
+      <div class="col-md-10 col-md-offset-1 center">
+        You have no friends.
+      </div>
+    {{/each}}
+  </div>
+</div>

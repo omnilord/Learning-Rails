@@ -9,10 +9,10 @@ $(function () {
     dataType: 'json'
   })
     .done((data) => {
-      $('#main_content').html(window.railsstockapp.templates.friend_portfolio(data));
+      $('#main_content').html(window.templates.friend_portfolio(data));
     })
     .fail((data) => {
-      $('#main_content').html(window.railsstockapp.templates.error({msg: 'Failed to load friend user.'}));
+      $('#main_content').html(window.templates.error({msg: 'Failed to load friend user.'}));
     });
 });
 </script>

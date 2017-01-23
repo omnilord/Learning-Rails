@@ -1,0 +1,17 @@
+<div class="container">
+  <h2 align="center">
+    Users
+    <small>({{users.length}} found)</small>
+  </h2>
+  <div class="row" data-rm-action="replace">
+    {{#each users}}
+      <div class="col-md-3">
+        {{> _friend}}
+      </div>
+    {{else}}
+      <div class="col-md-10 col-md-offset-1 center">
+        No users found.
+      </div>
+    {{/each}}
+  </div>
+</div>

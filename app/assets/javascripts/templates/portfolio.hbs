@@ -1,0 +1,12 @@
+<div class="container">
+  <h2 align="center">
+    My Portfolio
+    <small>
+      {{data.stocks.length}} stock(s) ({{data.portfolio.stocks}} owned),
+      {{data.portfolio.shares}} share(s),
+      value: <em>{{math data.portfolio.value "+" 0 precision=2 thousands="," prefix="$"}}</em>
+    </small>
+    <hr/>
+  </h2>
+  {{> _portfolio_list removeable=true pronoun="your"}}
+</div>

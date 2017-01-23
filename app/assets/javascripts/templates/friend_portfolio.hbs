@@ -1,0 +1,28 @@
+<div class="container friend-portfolio">
+  <div class="row center">
+    <div class="col-md-6 col-md-offset-3" id="friendinfo">
+      <h3>
+        {{data.friend.fullname}}<br/>
+        <small><a href="mailto:{{data.friend.email}}">{{data.friend.email}}</a></small>
+      </h3>
+      <div class="row">
+        <div class="col-md-3">
+          Stocks Watched: <span class="badge">{{data.portfolio.watches}}</span>
+        </div>
+        <div class="col-md-3">
+          Stocks Owned: <span class="badge">{{data.portfolio.stocks}}</span>
+        </div>
+        <div class="col-md-3">
+          Shares Owned: <span class="badge">{{data.portfolio.shares}}</span>
+        </div>
+        <div class="col-md-3">
+          Portfolio Value: <span class="badge">
+            {{math data.portfolio.value "+" 0 precision=2 thousands="," prefix="$"}}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr/>
+  {{> _portfolio_list}}
+</div>

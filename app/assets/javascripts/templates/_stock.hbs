@@ -1,0 +1,57 @@
+<div class="panel panel-default stock" data-stock-id="{{stock.id}}" data-user-stocks-id="{{track.id}}">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      <span class="stock-ticker">{{stock.ticker}}</span>
+      <span class="stock-price pull-right">{{math stock.last_price "+" 0 precision=2 thousands="," prefix="$"}}</span>
+    </h3>
+  </div>
+  <div class="panel-body">
+    <span class="stock-name">{{stock.name}}</span>
+  </div>
+  <div class="panel-footer">
+    <% if user_signed_in? %>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="input-group input-group-sm form-group form-group-sm" style="margin-bottom: 0; text-align: left;">
+            <%= number_field_tag nil, nil,
+                                 placeholder: '#',
+                                 class: 'form-control stock-count-edit',
+                                 style: 'width: 4em',
+                                 min: '0' %>
+            <span class="input-group-btn pull-left">
+              <%= button_tag name: nil, type: :button, class: 'btn btn-primary add-stock-to-portfolio' do %>
+                <i class="glyphicon glyphicon-plus"></i>
+              <% end %>
+              {{#if track}}
+                {{#if track.owned}}
+                  <%= button_tag name: nil, type: :button, class: 'btn btn-warning subtract-stock-from-portfolio' do %>
+                    <i class="glyphicon glyphicon-minus"></i>
+                  <% end %>
+                  <%= button_tag name: nil, type: :button, class: 'btn btn-danger remove-stock-from-portfolio' do %>
+                    <i class="glyphicon glyphicon-trash"></i>
+                  <% end %>
+                {{/if}}
+              {{/if}}
+            </span>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <span class="pull-right text-right">
+          {{#if track.owned}}
+            <div><small>Shares owned:</small> <strong>{{track.owned}}</strong></div>
+            <div><small>Value:</small> <strong>{{math track.owned "*" stock.last_price precision=2 thousands="," prefix="$"}}</strong></div>
+          {{else if track}}
+          <%= button_tag name: nil, type: :button, class: 'btn btn-primary remove-stock-from-watchlist' do %>
+            <i class="glyphicon glyphicon-eye-close"></i>
+          <% end %>
+          {{else}}
+          <%= button_tag name: nil, type: :button, class: 'btn btn-primary add-stock-to-watchlist' do %>
+            <i class="glyphicon glyphicon-eye-open"></i>
+          <% end %>
+          {{/if}}
+          </span>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+<div class="panel panel-info friend" data-user-id="{{friend.user_id}}">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      <span class="username">{{friend.fullname}}</span><br/>
+      <small>{{friend.email}}</small>
+    </h3>
+  </div>
+  <div class="panel-body">
+    <div>Stocks Watched: <span class="badge pull-right">{{portfolio.watches}}</span></div>
+    <div>Stocks Owned: <span class="badge pull-right">{{portfolio.stocks}}</span></div>
+    <div>Shares Owned: <span class="badge pull-right">{{portfolio.shares}}</span></div>
+    <div>Portfolio Value: <span class="badge pull-right">{{math portfolio.value "+" 0 precision=2 thousands="," prefix="$"}}</span></div>
+  </div>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-4">
+        <span class="pull-right">
+          <a class="btn btn-info btn-xs view-friend" href="<%= friends_path %>/{{friend.user_id}}">
+            <i class="glyphicon glyphicon-user"></i>
+            View
+          </a>
+          {{#if friend.is_friend}}
+            <button class="btn btn-danger btn-xs remove-friendship">
+              <i class="glyphicon glyphicon-trash"></i>
+              Remove
+            </button>
+          {{else}}
+            <button class="btn btn-success btn-xs add-friendship">
+              <i class="glyphicon glyphicon-plus"></i>
+              Add Friend
+            </button>
+          {{/if}}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

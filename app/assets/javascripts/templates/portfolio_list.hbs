@@ -1,0 +1,11 @@
+<div class="row" data-rm-action="{{#if removeable}}remove{{else}}replace{{/if}}">
+  {{#each data.stocks}}
+    <div class="col-md-4">
+      {{> _stock}}
+    </div>
+   {{else}}
+   <div class="col-md-4">
+     <p>No stocks in {{#if pronoun}}{{pronoun}}{{else}}their{{/if}} portfolio.</p>
+   </div>
+  {{/each}}
+</div>

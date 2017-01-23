@@ -25,5 +25,8 @@ module Derp
 
     # Use JavaScript instead of CoffeeScript
     config.generators.javascript_engine = :js
+
+    # Enable asset precompiling for Handlebars templates
+    config.assets.initialize_on_precompile = true
   end
 end
