@@ -1,5 +1,5 @@
 <script type="text/x-handlebars-partial" id="handlebars-spinner">
-  <i class="fa fa-spinner fa-spin"></i>
+<i class="fa fa-spinner fa-spin"></i>
 </script>
 
 
@@ -54,23 +54,65 @@
         </div>
         <div class="col-md-8">
           <span class="pull-right text-right">
-          {{#if track.owned}}
-            <div><small>Shares owned:</small> <strong>{{track.owned}}</strong></div>
-            <div><small>Value:</small> <strong>{{math track.owned "*" stock.last_price precision=2 thousands="," prefix="$"}}</strong></div>
-          {{else if track}}
-          <%= button_tag name: nil, type: :button, class: 'btn btn-primary remove-stock-from-watchlist' do %>
-            <i class="glyphicon glyphicon-eye-close"></i>
-          <% end %>
-          {{else}}
-          <%= button_tag name: nil, type: :button, class: 'btn btn-primary add-stock-to-watchlist' do %>
-            <i class="glyphicon glyphicon-eye-open"></i>
-          <% end %>
-          {{/if}}
+            {{#if track.owned}}
+              <div><small>Shares owned:</small> <strong>{{track.owned}}</strong></div>
+              <div><small>Value:</small> <strong>{{math track.owned "*" stock.last_price precision=2 thousands="," prefix="$"}}</strong></div>
+            {{else if track}}
+              <%= button_tag name: nil, type: :button, class: 'btn btn-primary remove-stock-from-watchlist' do %>
+                <i class="glyphicon glyphicon-eye-close"></i>
+              <% end %>
+            {{else}}
+              <%= button_tag name: nil, type: :button, class: 'btn btn-primary add-stock-to-watchlist' do %>
+                <i class="glyphicon glyphicon-eye-open"></i>
+              <% end %>
+            {{/if}}
           </span>
         </div>
       </div>
     <% end %>
   </div>
+</div>
+</script>
+
+
+<script type="text/x-handlebars-template" id="handlebars-stock_search_result">
+<div class="container">
+  <div class="row" data-rm-action="replace">
+    <div class="col-md-8 col-md-offset-2">
+      {{> stock}}
+    </div>
+  </div>
+</div>
+</script>
+
+
+<script type="text/x-handlebars-partial" id="handlebars-portfolio_list">
+<div class="row" data-rm-action="{{#if removeable}}remove{{else}}replace{{/if}}">
+  {{#each data.stocks}}
+    <div class="col-md-4">
+      {{> stock}}
+    </div>
+  {{else}}
+    <div class="col-md-4">
+      <p>No stocks in {{#if pronoun}}{{pronoun}}{{else}}their{{/if}} portfolio.</p>
+    </div>
+  {{/each}}
+</div>
+</script>
+
+
+<script type="text/x-handlebars-template" id="handlebars-portfolio">
+<div class="container">
+  <h2 align="center">
+    My Portfolio
+    <small>
+      {{data.stocks.length}} stock(s) ({{data.portfolio.stocks}} owned),
+      {{data.portfolio.shares}} share(s),
+      value: <em>{{math data.portfolio.value "+" 0 precision=2 thousands="," prefix="$"}}</em>
+    </small>
+    <hr/>
+  </h2>
+  {{> portfolio_list removeable=true pronoun="your"}}
 </div>
 </script>
 
@@ -99,13 +141,11 @@
           </a>
           {{#if friend.is_friend}}
             <button class="btn btn-danger btn-xs remove-friendship">
-              <i class="glyphicon glyphicon-trash"></i>
-              Remove
+              <i class="glyphicon glyphicon-trash"></i> Remove
             </button>
           {{else}}
             <button class="btn btn-success btn-xs add-friendship">
-              <i class="glyphicon glyphicon-plus"></i>
-              Add Friend
+              <i class="glyphicon glyphicon-plus"></i> Add Friend
             </button>
           {{/if}}
         </span>
@@ -116,68 +156,24 @@
 </script>
 
 
-<script type="text/x-handlebars-template" id="handlebars-stock_search_result">
-<div class="container">
-  <div class="row" data-rm-action="replace">
-    <div class="col-md-8 col-md-offset-2">
-      {{> stock}}
-    </div>
-  </div>
-</div>
-</script>
-
-
-<script type="text/x-handlebars-partial" id="handlebars-portfolio_list">
-<div class="row" data-rm-action="{{#if removeable}}remove{{else}}replace{{/if}}">
-  {{#each data.stocks}}
-    <div class="col-md-4">
-      {{> stock}}
-    </div>
-   {{else}}
-   <div class="col-md-4">
-     <p>No stocks in {{#if pronoun}}{{pronoun}}{{else}}their{{/if}} portfolio.</p>
-   </div>
-  {{/each}}
-</div>
-</script>
-
-
-<script type="text/x-handlebars-template" id="handlebars-portfolio">
-  <div class="container">
-    <h2 align="center">
-      My Portfolio
-      <small>
-        {{data.stocks.length}} stock(s) ({{data.portfolio.stocks}} owned),
-        {{data.portfolio.shares}} share(s),
-        value: <em>{{math data.portfolio.value "+" 0 precision=2 thousands="," prefix="$"}}</em>
-      </small>
-      <hr/>
-    </h2>
-    {{> portfolio_list removeable=true pronoun="your"}}
-  </div>
-</script>
-
-
 <script type="text/x-handlebars-template" id="handlebars-friends">
-  <div class="container">
-    <h2 align="center">
-      My Friends
-      <small>({{data.friends.length}} friends)</small>
-    </h2>
-    <div class="row" data-rm-action="remove">
-        {{#if data.friends}}
-          {{#each data.friends}}
-            <div class="col-md-3">
-              {{> friend}}
-            </div>
-          {{/each}}
-        {{else}}
-          <div class="col-md-10 col-md-offset-1 center">
-            You have no friends.
-          </div>
-        {{/if}}
-    </div>
+<div class="container">
+  <h2 align="center">
+    My Friends
+    <small>({{data.friends.length}} friends)</small>
+  </h2>
+  <div class="row" data-rm-action="remove">
+    {{#each data.friends}}
+      <div class="col-md-3">
+        {{> friend}}
+      </div>
+    {{else}}
+      <div class="col-md-10 col-md-offset-1 center">
+        You have no friends.
+      </div>
+    {{/each}}
   </div>
+</div>
 </script>
 
 
@@ -220,17 +216,15 @@
     <small>({{users.length}} found)</small>
   </h2>
   <div class="row" data-rm-action="replace">
-      {{#if users}}
-        {{#each users}}
-          <div class="col-md-3">
-            {{> friend}}
-          </div>
-        {{/each}}
-      {{else}}
-        <div class="col-md-10 col-md-offset-1 center">
-          No users found.
-        </div>
-      {{/if}}
+    {{#each users}}
+      <div class="col-md-3">
+        {{> friend}}
+      </div>
+    {{else}}
+      <div class="col-md-10 col-md-offset-1 center">
+        No users found.
+      </div>
+    {{/each}}
   </div>
 </div>
 </script>
@@ -311,10 +305,10 @@ $(function () {
     };
   })());
 
-  spinner = templates.spinner();
   window.railsstockapp = {
     templates: templates
   };
+  spinner = templates.spinner();
 
   $(document)
     .on('turbolinks:load ready', function () {
