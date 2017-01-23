@@ -262,42 +262,87 @@
 */
 
 $(function () {
-  var maindiv = $('#main_content'),
-      user = <%= current_user.to_json(only: [:id, :email, :created_at]).html_safe %>,
-      templates = {}, partials = {},
-      /*
-        TODO: Because of TurboLinks, need to fix these search form callbacks so
-              they work after visiting other links.
-        TODO: Show search results in a popup dialog instead of inside the page's
-              main content div.
-      */
-      nav_search = $('.search-form').on({
-        'ajax:success': function (ev, data, status) {
-          var callback = $(this).data('template');
-          maindiv.html(templates[callback](data.data));
-        },
-        'ajax:before': function () {
-          maindiv.html(templates.spinner());
-        },
-        'ajax:error': function (ev, xhr, status, err) {
-          var type = $(this).closest('.toggling-form').data('searchfor');
-          maindiv.html(templates.error({ msg: 'No ' + type + ' found.' }));
-        }
-      }).filter(function () {
-        return !$(this).closest('.toggling-form').is('.invis');
-      }).first(),
-      search_val = nav_search.find('input[type="text"]').val(),
-      spinner;
+  var maindiv, templates = {}, partials = {}, spinner,
+      user = <%= current_user.to_json(only: [:id, :email, :created_at]).html_safe %>;
 
   const toggle_spinners = ($btn) => {
     $btn.parent().find('button').each(function () {
       $(this).html(spinner).prop('disabled', true);
     });
-  }
+  };
+
+  // Pre-load helpers
+  Handlebars.registerHelper('math', function (l, op, r, options) {
+    l = parseFloat(l);
+    r = parseFloat(r);
+
+    var v = { '+': (l + r), '-': (l - r), '*': (l * r), '/': (l / r), '%': (l % r) }[op];
+    if (isNaN(v)) {
+      return options.hash.hasOwnProperty('onNaN') ? options.hash.onNaN : '';
+    }
+    v = v.toFixed(options.hash.precision || -1);
+    if (options.hash.thousands) {
+      v = v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, options.hash.thousands);
+    }
+    if (options.hash.prefix) {
+      v = options.hash.prefix + v;
+    }
+    if (options.hash.suffix) {
+      v+= options.hash.suffix;
+    }
+    return v;
+  });
+
+  // Load all templates
+  $('script[type|="text/x-handlebars"]').each((() => {
+    var hclr = /^(text\/x\-)?handlebars\-/;
+
+    return function () {
+      var id = this.id.replace(hclr, ''),
+          type = this.getAttribute('type').replace(hclr, '');
+
+      if (type == 'partial') {
+        partials[id] = Handlebars.registerPartial(id, this.innerHTML);
+      }
+      templates[id] = Handlebars.compile(this.innerHTML);
+      <% if Rails.env.development? %>
+      console.log(templates.hasOwnProperty(id), id + ' ' + type + ' loaded.', this);
+      <% end %>
+    };
+  })());
+
+  spinner = templates.spinner();
+  window.railsstockapp = {
+    templates: templates
+  };
+
+  $(document)
+    .on('turbolinks:load ready', function () {
+      var nav_search = $('.search-form').on({
+            'ajax:before': () => { maindiv.html(templates.spinner()); },
+            'ajax:success': function (ev, data, status) {
+              var callback = $(this).data('template');
+              console.log([this, callback, data.data]);
+              maindiv.html(templates[callback](data.data));
+            },
+            'ajax:error': function (ev, xhr, status, err) {
+              var type = $(this).closest('.toggling-form').data('searchfor');
+              maindiv.html(templates.error({ msg: 'No ' + type + ' found.' }));
+            }
+          }).filter(function () {
+            return !$(this).closest('.toggling-form').is('.invis');
+          }).first(),
+          search_val = nav_search.find('input[type="text"]').val();
+
+      // Immediate executions
+      maindiv = $('#main_content');
+      if (search_val != '') {
+        nav_search.submit();
+      }
+    })
 
   <% if user_signed_in? %>
 
-  $(document)
     // Manipulating stock portfolio
     .on('click', 'button.add-stock-to-portfolio, button.subtract-stock-from-portfolio, button.add-stock-to-watchlist', function () {
       var $btn = $(this),
@@ -358,26 +403,11 @@ $(function () {
       window.location.href = '<%= friends_path %>/' + $(this).closest('[data-user-id]').attr('data-user-id');
     })
     .on('click', 'button.add-friendship', function () {
-      var $btn = $(this),
-          $this = $btn.closest('[data-user-id]'),
-          friend_name = $this.find('span.username').text(),
-          user_id = $this.attr('data-user-id');
-
-      $.ajax({
-        url: '<%= friends_path %>/' + user_id,
-        method: 'POST',
-        dataType: 'json',
-        beforeSend: toggle_spinners($btn)
-      })
-        .done((data) => { $this.replaceWith(templates.friend(data.data)); })
-        .fail((data) => { $this.replaceWith(templates.error({msg: 'Failed to add "' + friend_name + '" to friends.'})); });
+      window.location.href = '<%= friends_path %>/' + $(this).closest('[data-user-id]').attr('data-user-id');
     })
     .on('click', 'button.remove-friendship', function () {
       var $btn = $(this),
-          $this = $btn.closest('[data-user-id]'),
-          friend_name = $this.find('span.username').text(),
-          user_id = $this.attr('data-user-id'),
-          action = $this.closest('[data-rm-action]').attr('data-rm-action');
+          user_id = $btn.closest('[data-user-id]').attr('data-user-id');
 
       $.ajax({
         url: '<%= friends_path %>/' + user_id,
@@ -385,77 +415,16 @@ $(function () {
         dataType: 'json',
         beforeSend: toggle_spinners($btn)
       })
-        .done((data) => {
-          if (action == 'remove') {
-            $this.parent().remove();
-          } else {
-            $this.replaceWith(templates.friend(data.data));
-          }
-        })
-        .fail((data) => { $this.replaceWith(templates.error({msg: 'Failed to remove friendship with "' + friend_name + '".'})); });
-    });
+        .done((data) => { $this.closest('tr').remove(); })
+        .fail((data) => { $this.replaceWith(templates.error({msg: 'Failed to remove friendship.'})); });
+    })
 
-
-  // Handle numeric inputs into the count input
-  $(document).on('keyup keydown', 'input.stock-count-edit', function (ev) {
-    if ((ev.keyCode < 48 || ev.keyCode > 57) && [8, 9, 13, 46].indexOf(ev.keyCode) == -1) {
-      ev.preventDefault();
-    }
-  });
-
-  <% end %>
-
-
-  // Pre-load helpers
-  Handlebars.registerHelper('math', function (l, op, r, options) {
-    l = parseFloat(l);
-    r = parseFloat(r);
-
-    var v = { '+': (l + r), '-': (l - r), '*': (l * r), '/': (l / r), '%': (l % r) }[op];
-    if (isNaN(v)) {
-      return options.hash.hasOwnProperty('onNaN') ? options.hash.onNaN : '';
-    }
-    v = v.toFixed(options.hash.precision || -1);
-    if (options.hash.thousands) {
-      v = v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, options.hash.thousands);
-    }
-    if (options.hash.prefix) {
-      v = options.hash.prefix + v;
-    }
-    if (options.hash.suffix) {
-      v+= options.hash.suffix;
-    }
-    return v;
-  });
-
-
-  // Load all templates
-  $('script[type|="text/x-handlebars"]').each((() => {
-    var hclr = /^(text\/x\-)?handlebars\-/;
-
-    return function () {
-      var id = this.id.replace(hclr, ''),
-          type = this.getAttribute('type').replace(hclr, '');
-
-      if (type == 'partial') {
-        partials[id] = Handlebars.registerPartial(id, this.innerHTML);
+    // Handle numeric inputs into the count input
+    .on('keyup keydown', 'input.stock-count-edit', function (ev) {
+      if ((ev.keyCode < 48 || ev.keyCode > 57) && [8, 9, 13, 46].indexOf(ev.keyCode) == -1) {
+        ev.preventDefault();
       }
-      templates[id] = Handlebars.compile(this.innerHTML);
-      <% if Rails.env.development? %>
-      console.log(templates.hasOwnProperty(id), id + ' ' + type + ' loaded.', this);
-      <% end %>
-    };
-  })());
-  spinner = templates.spinner();
-
-
-  // Immediate executions
-  if (search_val != '') {
-    nav_search.submit();
-  }
-
-  window.railsstockapp = {
-    templates: templates
-  };
+    })
+  <% end %>;
 });
 </script>
