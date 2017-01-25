@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  devise_for :users
+
   # Static pages
   root 'pages#index'
   get 'careers' => 'pages#careers'

@@ -28,29 +28,23 @@
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <% # if user_signed_in? %>
+        <% if user_signed_in? %>
         <li>
           <a href="#">User</a>
           <%= nil # link_to current_user.fullname, edit_registration_path(current_user)
           %>
         </li>
         <li>
-          <a href="#">Logout</a>
-          <%= nil # link_to "Logout", destroy_user_session_path, method: :delete
-          %>
+          <%= link_to "Logout", destroy_user_session_path, method: :delete %>
         </li>
-        <% # else %>
+        <% else %>
         <li>
-          <a href="#">Login</a>
-          <%= nil # link_to "Login", new_user_session_path
-          %>
+          <%= link_to "Login", new_user_session_path %>
         </li>
         <li>
-          <a href="#">Sign Up</a>
-          <%= nil # link_to "Sign Up", new_user_registration_path
-          %>
+          <%= link_to "Sign Up", new_user_registration_path %>
         </li>
-        <% # end %>
+        <% end %>
         <li class="search-box">
           <%= form_tag '#', remote: true, method: :get, 'data-type': :json,
                        class: 'navbar-form navbar-right search-form' do %>
