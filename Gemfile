@@ -12,7 +12,7 @@ gem 'rails', '~> 4.2.7'
 gem 'devise'
 gem 'twitter-bootstrap-rails'
 gem 'devise-bootstrap-views'
-gem 'devise-authy'
+# gem 'devise-authy'
 
 
 # view gems

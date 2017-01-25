@@ -1,0 +1,71 @@
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target="#top-nav-bar-content" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <%= link_to root_path, title: 'Home', class: 'navbar-brand', id: 'navlogo' do %>
+        <i class="fa fa-usd fa-2x"></i>
+      <% end %>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="top-nav-bar-content">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="#">Page 1</a>
+        </li>
+        <li>
+          <a href="#">Page 2</a>
+        </li>
+        <li>
+          <%= link_to 'About', about_path %>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <% # if user_signed_in? %>
+        <li>
+          <a href="#">User</a>
+          <%= nil # link_to current_user.fullname, edit_registration_path(current_user)
+          %>
+        </li>
+        <li>
+          <a href="#">Logout</a>
+          <%= nil # link_to "Logout", destroy_user_session_path, method: :delete
+          %>
+        </li>
+        <% # else %>
+        <li>
+          <a href="#">Login</a>
+          <%= nil # link_to "Login", new_user_session_path
+          %>
+        </li>
+        <li>
+          <a href="#">Sign Up</a>
+          <%= nil # link_to "Sign Up", new_user_registration_path
+          %>
+        </li>
+        <% # end %>
+        <li class="search-box">
+          <%= form_tag '#', remote: true, method: :get, 'data-type': :json,
+                       class: 'navbar-form navbar-right search-form' do %>
+            <div class="input-group form-group">
+              <%= text_field_tag :search, nil, placeholder: 'Search...',
+                                  class: 'form-control' %>
+              <span class="input-group-btn btn-group">
+                <%= button_tag name: nil, type: :submit, class: 'btn btn-default' do %>
+                  <i class="glyphicon glyphicon-search"></i>
+                <% end %>
+              </span>
+            </div>
+          <% end %>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
