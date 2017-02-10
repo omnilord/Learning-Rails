@@ -1,13 +1,8 @@
 <% if flash.any? %>
-<div class="container">
+<div class="container alert-container">
   <div class="row flash">
   <% flash.each do |type, msg| %>
-    <% cls = case type
-             when 'notice' then 'info'
-             when 'alert' then 'danger'
-             else type
-             end %>
-    <div class="col-xs-10 col-xs-offset-1 alert alert-<%= cls %> flash-msg">
+    <div class="col-xs-10 col-xs-offset-1 <%= alert_class(type) %> flash-msg">
       <a href="#" class="close" data-dismiss="alert">&#215;</a>
       <ul>
         <%= Array(msg).map { |s| "<li>#{sanitize(s)}</li>" }.join('').html_safe %>
@@ -16,4 +11,9 @@
   <% end %>
   </div>
 </div>
+
+<script>
+$(".alert-container").fadeTo(2000 * <%= flash.count %>, 500)
+                     .slideUp(500, function () { $(this).slideUp(500, () => $(this).remove()); });
+</script>
 <% end %>
