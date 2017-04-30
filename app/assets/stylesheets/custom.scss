@@ -55,3 +55,46 @@ footer {
     padding: 10px;
   }
 }
+
+
+/* pulled from coursework */
+.features {
+  ul {
+    margin-left: 0;
+    padding-left: 15px;
+  }
+}
+
+.jumbotron {
+  text-align: center;
+  background-image: asset-url('sunset.jpg');
+  background-image-copyright: 'Panhandle Sunset --- A Winter Scene by Judy Baxter, Creative Commons';
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  font-family: 'Helvetica Neue' !important;
+  font-stretch: expanded;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  margin-left: 15px;
+  margin-right: 15px;
+  text-shadow: -1px 0 #555, 0 1px #555, 1px 0 #555, 0 -1px #555;
+
+  h2 {
+    font-size: 35px !important;
+
+    .lead {
+      font-size: 30px !important;
+    }
+  }
+}
+
+.no-left-padding {
+  padding-left: 0 !important;
+}
+
+.listing {
+  list-style: none;
+  padding-left: 0;
+}
+/* end of course-provided styles */

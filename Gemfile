@@ -1,10 +1,10 @@
 source 'https://rubygems.org'
-ruby '2.3.1'
+ruby '2.4.1'
 
 
 # core gems
 
-gem 'rails', '~> 4.2.7'
+gem 'rails', '~> 4.2.8'
 
 
 # authentication gems
@@ -31,6 +31,7 @@ gem 'jbuilder', '~> 2.0'
 
 gem 'will_paginate', '~> 3.1.0'
 gem 'bootstrap-will_paginate', '~> 0.0.10'
+gem 'stripe'
 
 
 # support gems
