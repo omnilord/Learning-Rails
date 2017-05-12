@@ -21,6 +21,14 @@ $navbar-default-link-active-color: $navbar-default-color-global;
   padding: 0 !important;
 }
 
+.no-left-padding {
+  padding-left: 0 !important;
+}
+
+.no-right-padding {
+  padding-right: 0 !important;
+}
+
 footer {
   margin-top: 25px;
   padding-top: 5px;
@@ -89,9 +97,6 @@ footer {
   }
 }
 
-.no-left-padding {
-  padding-left: 0 !important;
-}
 
 .listing {
   list-style: none;

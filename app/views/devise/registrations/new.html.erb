@@ -1,5 +1,6 @@
+<div class="container">
 <%= bootstrap_devise_error_messages! %>
-<div class="panel panel-default devise-bs">
+<div class="panel panel-info devise-bs">
   <div class="panel-heading">
     <h4><%= t('.sign_up', default: 'Sign up') %></h4>
   </div>
@@ -17,8 +18,49 @@
         <%= f.label :password_confirmation %>
         <%= f.password_field :password_confirmation, class: 'form-control' %>
       </div>
-      <%= f.submit t('.sign_up', default: 'Sign up'), class: 'btn btn-primary' %>
+      <%= fields_for(:payment) do |p| %>
+        <div class="row col-md-8 col-md-offset-2">
+          <div class="panel panel-info payment-info-signup">
+            <div class="panel-heading">
+              <h3 class="panel-title">Payment Info</h3>
+            </div>
+            <div class="panel-body">
+              <div class="form-group col-md-4">
+                <%= p.label :card_number, 'Card Number', data: { stripe: 'label' } %>
+                <%= p.text_field :card_number, class: 'form-control', required: true, data: { stripe: 'number' } %>
+              </div>
+              <div class="form-group col-md-2">
+                <%= p.label :card_cvv, 'Card CVV', data: { stripe: 'label' } %>
+                <%= p.text_field :card_cvv, class: 'form-control', required: true, data: { stripe: 'cvv' } %>
+              </div>
+              <div class="form-group col-md-6">
+                <div class="col-md-12">
+                  <%= p.label :card_expires, 'Card Expiration', data: { stripe: 'label' } %>
+                </div>
+                <div class="col-md-6">
+                  <%= p.select :card_expires_month, options_for_select(Payment.month_options),
+                               { include_blank: 'Month'},
+                               class: 'form-control',
+                               required: true,
+                               data: { stripe: 'exp-month' } %>
+                </div>
+                <div class="col-md-6">
+                  <%= p.select :card_expires_year, options_for_select(Payment.year_options),
+                               { include_blank: 'Year'},
+                               class: 'form-control',
+                               required: true,
+                               data: { stripe: 'exp-year' } %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      <div class="row col-md-12">
+        <%= f.submit t('.sign_up', default: 'Sign up'), class: 'btn btn-primary' %>
+      </div>
     <% end %>
   </div>
 </div>
 <%= render 'devise/shared/links' %>
+</div>
