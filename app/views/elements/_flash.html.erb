@@ -13,7 +13,8 @@
 </div>
 
 <script>
-$(".alert-container").fadeTo(2000 * <%= flash.count %>, 500)
-                     .slideUp(500, function () { $(this).slideUp(500, () => $(this).remove()); });
+$(".alert-container").fadeTo(1500 * <%= flash.count %>, 500)
+                     .delay(1500 * <%= flash.count %>)
+                     .slideUp(1000, function () { $(this).slideUp(1000, () => $(this).remove()); });
 </script>
 <% end %>
