@@ -1,8 +1,8 @@
 $(document).on('turbolinks:load', (function () {
   function show_error(message) {
     var $fm = ($('#flash-messages').size() < 1)
-           ? $('div.container').prepend('<div id="flash-messages"></div>')
-           : $('#flash-messages');
+            ? $('div.container').prepend('<div id="flash-messages"></div>')
+            : $('#flash-messages');
     $fm.html(
       '<div class="alert alert-warning">'
       + '<a class="close" data-dismiss="alert">×</a>'
