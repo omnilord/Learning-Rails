@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
 
   #all route should go here
+  resources :images
 
 
   # Catch all to prevent generic 404 errors from rendering

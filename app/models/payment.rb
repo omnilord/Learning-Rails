@@ -10,13 +10,13 @@ class Payment < ActiveRecord::Base
     (Date.today.year..(Date.today.year + 10)).to_a
   end
 
-  def process_payment
+  def process_payment(amt=1000)
     customer = Stripe::Customer.create(email: email, source: token)
     charge = Stripe::Charge.create(
       customer: customer.id,
       description: "Premium Registration for #{email}",
       currency: 'usd',
-      amount: 1000
+      amount: amt
     )
   end
 end
