@@ -4,5 +4,6 @@ At Present, I have two functional applications from the course checked into Gith
 
 - [Blogs app](https://github.com/omnilord/Learning-Rails/tree/blog)
 - [Stocks app](https://github.com/omnilord/Learning-Rails/tree/stocks)
+- [Photos app](https://github.com/omnilord/learning-rails/tree/photos)
 
 The descriptions of each of these project apps can be view on the respective branch in the README.md file.
